@@ -14,7 +14,7 @@ class SplashScreen extends StatelessWidget {
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) =>   ScreenLogin(),
+          builder: (context) =>   LoginScreen(),
         ),
       );
     });
@@ -22,7 +22,7 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Center(
         child: Image.asset(
-          'assets/images/MedhyamLogo.png',
+          'assets/images/large-removebg-preview.png',
         ),
       ),
     );

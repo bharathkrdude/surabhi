@@ -1,33 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:surabhi/view/widgets/custom_textfield.dart';
- final _formKey = GlobalKey<FormState>();
-  final _formData = <String, dynamic>{};
-class ScreenLogin extends StatelessWidget {
-  const ScreenLogin({super.key});
+import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/view/screens/login/widgets/clipped_container.dart';
 
+
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 100,),
-              Form(
-                child: CustomTextField(label: "full name", icon: Icons.abc, onSaved: (String? value) {
-                    // Handle the saved value
-                    if (value != null) {
-                    // Do something with the value
-                    print("Saved value: $value");
-                    }
-                  }),
-              )
-            ],
-          ),
-        ),
+    return Scaffold(
+      resizeToAvoidBottomInset: true, // Ensure layout resizes when keyboard appears
+      body: SmoothContainerWithImage(
+        height: 0.5,
+        color: primaryButton,
+        imageUrl: 'https://shorturl.at/dtmRa',
       ),
     );
   }
 }
+
+
+
