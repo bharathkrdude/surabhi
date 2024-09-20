@@ -11,7 +11,7 @@ class TextButtonWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-          color: Color.fromARGB(255, 214, 8, 8),
+          color: const Color.fromARGB(255, 214, 8, 8),
           width: 2,
         ),
         borderRadius: BorderRadius.circular(8),

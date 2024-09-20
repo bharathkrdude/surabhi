@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:surabhi/view/screens/login/login_screen.dart';
 import 'package:surabhi/view/screens/login/widgets/clipped_container.dart';
 
 class SmoothContainerWithImage extends StatelessWidget {
@@ -29,7 +28,7 @@ class SmoothContainerWithImage extends StatelessWidget {
                 imageUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Center(child: Icon(Icons.error, color: Colors.white));
+                  return const Center(child: Icon(Icons.error, color: Colors.white));
                 },
               ),
             ),

@@ -17,9 +17,9 @@ class ScreenMaintain extends StatelessWidget {
               Row(
                 children: [
                   SizedBox(width: MediaQuery.of(context).size.width * 0.7),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const TextButtonWidget(),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextButtonWidget(),
                   ),
                 ],
               ),
@@ -27,7 +27,7 @@ class ScreenMaintain extends StatelessWidget {
               GridView.count(
                 crossAxisCount: 4, // 4 items per row
                 shrinkWrap: true, // Makes the GridView take only necessary space
-                physics: NeverScrollableScrollPhysics(), // Prevent GridView scrolling inside SingleChildScrollView
+                physics: const NeverScrollableScrollPhysics(), // Prevent GridView scrolling inside SingleChildScrollView
                 crossAxisSpacing: 10, // Space between columns
                 mainAxisSpacing: 10, // Space between rows
                 padding: const EdgeInsets.all(10), // Padding around the GridView
@@ -52,12 +52,14 @@ class CustomContainerWithMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.13,
+      
+      height: MediaQuery.of(context).size.height * 0.2,
       width: MediaQuery.of(context).size.width * 0.28,
       color: Colors.white,
       child: Stack(
         children: [
-          Center(
+          const Align(
+            alignment: Alignment.center,
             child: Text(
               "01", // You can replace this with dynamic content
               style: TextStyle(
@@ -67,6 +69,7 @@ class CustomContainerWithMark extends StatelessWidget {
               ),
             ),
           ),
+       
           // Positioned Icon in the bottom-right corner
           Align(
             alignment: Alignment.bottomRight, // Aligns the icon to the bottom-right corner

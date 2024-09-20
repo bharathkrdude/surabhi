@@ -4,9 +4,11 @@ import 'package:surabhi/view/screens/login/widgets/clipped_container.dart';
 
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       resizeToAvoidBottomInset: true, // Ensure layout resizes when keyboard appears
       body: SmoothContainerWithImage(
         height: 0.5,
