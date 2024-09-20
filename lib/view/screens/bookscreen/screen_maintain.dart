@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/view/screens/login/widgets/textbutton_widget.dart';
+import 'package:surabhi/view/screens/maintainanceDetail/widget/bookng_card_widget.dart';
 
 class ScreenMaintain extends StatelessWidget {
   const ScreenMaintain({super.key});
@@ -33,7 +34,13 @@ class ScreenMaintain extends StatelessWidget {
                 padding: const EdgeInsets.all(10), // Padding around the GridView
                 children: List.generate(8, (index) {
                   // Example with 8 items
-                  return CustomContainerWithMark(isChecked: index % 2 == 0); // Custom widget for each grid item
+                  return GestureDetector(
+                    onTap: () {
+                      // Show a popup dialog when an item is clicked
+                      _showPopup(context, index);
+                    },
+                    child: CustomContainerWithMark(isChecked: index % 2 == 0), // Custom widget for each grid item
+                  );
                 }),
               ),
             ],
@@ -41,6 +48,18 @@ class ScreenMaintain extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _showPopup(BuildContext context, int index) {
+    showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  contentPadding: EdgeInsets.zero, // Remove default padding
+                  content: BookingCard(index: 1), // Pass index or any required data
+                );
+              },
+            );
   }
 }
 
@@ -52,7 +71,6 @@ class CustomContainerWithMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       height: MediaQuery.of(context).size.height * 0.2,
       width: MediaQuery.of(context).size.width * 0.28,
       color: Colors.white,
@@ -69,7 +87,6 @@ class CustomContainerWithMark extends StatelessWidget {
               ),
             ),
           ),
-       
           // Positioned Icon in the bottom-right corner
           Align(
             alignment: Alignment.bottomRight, // Aligns the icon to the bottom-right corner

@@ -3,6 +3,7 @@ import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/view/screens/bookscreen/screen_maintain.dart';
 import 'package:surabhi/view/screens/botttomnavigation/constants.dart';
 import 'package:surabhi/view/screens/login/login_screen.dart';
+import 'package:surabhi/view/screens/maintainanceDetail/maintanance_details.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({super.key});
@@ -16,8 +17,8 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
 
   final List<Widget> _screens = [
    ScreenMaintain(),
-    LoginScreen(),
-     ScreenMaintain(),
+    const LoginScreen(),
+    
   ];
 
   void _onTabTapped(int index) {
