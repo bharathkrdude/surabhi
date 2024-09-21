@@ -4,12 +4,12 @@ import 'package:surabhi/view/screens/main/screen_main.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 
-class SmoothContainerWithImage extends StatelessWidget {
+class CurvedLoginScreen extends StatelessWidget {
   final double height;
   final Color color;
   final String imageUrl;
 
-  const SmoothContainerWithImage({
+  const CurvedLoginScreen({
     Key? key,
     this.height = 0.3, // Adjusted height to a smaller value
     this.color = Colors.blue,
@@ -27,6 +27,9 @@ class SmoothContainerWithImage extends StatelessWidget {
               width: double.infinity,
               height: MediaQuery.of(context).size.height * height, // Smaller height for the top container
               color: color,
+              child: Center(
+                child: Image.asset(logo,height: 200,width: 100,),
+              ),
             ),
           ),
           Padding(
@@ -71,69 +74,72 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Full Name',
-            prefixIcon: const Icon(Icons.person, color: primaryButton),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+    return Container(
+      
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Full Name',
+              prefixIcon: const Icon(Icons.person, color: primaryButton),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
-        TextField(
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: 'Password',
-            prefixIcon: const Icon(Icons.lock, color: primaryButton),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          const SizedBox(height: 16),
+          TextField(
+            obscureText: true,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              prefixIcon: const Icon(Icons.lock, color: primaryButton),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            SizedBox(
-              width: 24,
-              height: 24,
-              child: Checkbox(
-                value: false,
-                onChanged: (value) {},
-                shape: const CircleBorder(),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              SizedBox(
+                width: 24,
+                height: 24,
+                child: Checkbox(
+                  value: false,
+                  onChanged: (value) {},
+                  shape: const CircleBorder(),
+                ),
+              ),
+              const Text('Remember Me', style: TextStyle(color: Colors.grey)),
+              const Spacer(),
+              const Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PrimaryButtonWidget(
+              title: "login", 
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ScreenMain(),
+                  ),
+                );
+              }
+            ),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: RichText(
+              text: const TextSpan(
+                style: TextStyle(color: Colors.grey),
+                children: [
+                  TextSpan(text: "Don't have an account? "),
+                  TextSpan(text: 'Sign up', style: TextStyle(color: Colors.blue)),
+                ],
               ),
             ),
-            const Text('Remember Me', style: TextStyle(color: Colors.grey)),
-            const Spacer(),
-            const Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: PrimaryButtonWidget(
-            title: "login", 
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const ScreenMain(),
-                ),
-              );
-            }
           ),
-        ),
-        const SizedBox(height: 20),
-        Center(
-          child: RichText(
-            text: const TextSpan(
-              style: TextStyle(color: Colors.grey),
-              children: [
-                TextSpan(text: "Don't have an account? "),
-                TextSpan(text: 'Sign up', style: TextStyle(color: Colors.blue)),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

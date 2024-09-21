@@ -8,11 +8,12 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
+      backgroundColor: backgroundColorlightgrey,
       resizeToAvoidBottomInset: true, // Ensure layout resizes when keyboard appears
-      body: SmoothContainerWithImage(
+      body: CurvedLoginScreen(
         height: 0.5,
-        color: primaryButton,
+        color: Colors.white,
         imageUrl: 'https://shorturl.at/dtmRa',
       ),
     );

@@ -77,12 +77,12 @@ class CustomContainerWithMark extends StatelessWidget {
       child: Stack(
         children: [
           const Align(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             child: Text(
-              "01", // You can replace this with dynamic content
+              "0111", // You can replace this with dynamic content
               style: TextStyle(
                 color: Colors.teal,
-                fontSize: 34,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),

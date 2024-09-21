@@ -3,7 +3,7 @@ import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/view/screens/bookscreen/screen_maintain.dart';
 import 'package:surabhi/view/screens/botttomnavigation/constants.dart';
 import 'package:surabhi/view/screens/login/login_screen.dart';
-import 'package:surabhi/view/screens/maintainanceDetail/maintanance_details.dart';
+import 'package:surabhi/view/screens/profile/profile_screen.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({super.key});
@@ -18,7 +18,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   final List<Widget> _screens = [
    ScreenMaintain(),
     const LoginScreen(),
-    
+    ProfilePage(),
   ];
 
   void _onTabTapped(int index) {
@@ -60,11 +60,13 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           child: Column(
             children: <Widget>[
                DrawerHeader(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: backgroundColorWhite,
                 ),
-                child: Container(
-                  child: Image.asset("assets/images/surbhi_logo-removebg-preview.png"),
+                child: SizedBox(
+                  height: 40,
+                  child: Image.asset(logo,),
+ 
                 ),
               ),
               ListTile(

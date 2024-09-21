@@ -11,7 +11,7 @@ class ScreenMaintananceDetails extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            BookingCard(index:index ,)
+            BookingCard(index:index ,),
           ],
         ),
       ),

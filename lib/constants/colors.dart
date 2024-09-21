@@ -11,3 +11,6 @@ const borderColor = Color(0xffFFC107);
 const white = Color(0xFFFFFFFF);
 const black = Color(0xFF000000);
 const storyBorderColor = [Color(0xFF9B2282), Color(0xFFEEA863)];
+
+String logo = "assets/images/logo_surbhi-removebg.png";
+String logoText = "assets/images/LogoText.png";
