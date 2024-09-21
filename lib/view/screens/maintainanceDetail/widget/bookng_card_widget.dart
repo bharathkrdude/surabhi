@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/view/screens/update/update_cheklist.dart';
+import 'package:surabhi/view/screens/update/update_status.dart';
 
 class BookingCard extends StatelessWidget {
   final int index;
 
-  BookingCard({super.key, required this.index});
+  const BookingCard({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +73,8 @@ class BookingCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Icon(Icons.location_on, size: 16, color: Colors.grey),
                       SizedBox(width: 4),
                       Expanded(
@@ -84,8 +86,8 @@ class BookingCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                       SizedBox(width: 4),
                       Text(
@@ -95,8 +97,8 @@ class BookingCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Icon(Icons.person, size: 16, color: Colors.grey),
                       SizedBox(width: 4),
                       Text(
@@ -110,21 +112,29 @@ class BookingCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Accept', style: TextStyle(color: Colors.white)),
+                          onPressed: () { Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UpdateStatusPage(),
+                ),
+              );},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primaryButton,
                           ),
+                          child: const Text('update status', style: TextStyle(color: Colors.white)),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () {},
-                          child: const Text('Decline'),
+                          onPressed: () { Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UpdateChecklist(),
+                ),
+              );},
                           style: OutlinedButton.styleFrom(
                             foregroundColor: primaryButton,
                           ),
+                          child:  const Text('checklist'),
                         ),
                       ),
                     ],

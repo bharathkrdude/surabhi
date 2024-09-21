@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:surabhi/constants/colors.dart';
 
 class TextButtonWidget extends StatelessWidget {
   const TextButtonWidget({super.key});
@@ -11,23 +12,24 @@ class TextButtonWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-          color: const Color.fromARGB(255, 214, 8, 8),
+          color: primaryButton,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextButton.icon(
+        style: ButtonStyle(  ),
         onPressed: () {
           // Your onPressed functionality
         },
         icon: const Icon(
           Icons.short_text_sharp, // Filter icon
-          color: Colors.black,
+          color: primaryButton,
         ),
         label: const Text(
           'Filter',
           style: TextStyle(
-            color: Colors.black,
+            color: primaryButton,
           ),
         ),
       ),

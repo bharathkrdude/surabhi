@@ -64,7 +64,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   color: backgroundColorWhite,
                 ),
                 child: Container(
-                  child: Image.asset("assets/images/large-removebg-preview.png"),
+                  child: Image.asset("assets/images/surbhi_logo-removebg-preview.png"),
                 ),
               ),
               ListTile(

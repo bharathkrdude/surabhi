@@ -22,7 +22,7 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Center(
         child: Image.asset(
-          'assets/images/large-removebg-preview.png',
+          'assets/images/surbhi_logo-removebg-preview.png',
         ),
       ),
     );
