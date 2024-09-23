@@ -71,36 +71,57 @@ class CustomContainerWithMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.2,
-      width: MediaQuery.of(context).size.width * 0.28,
-      color: Colors.white,
-      child: Stack(
-        children: [
-          const Align(
-            alignment: Alignment.topCenter,
-            child: Text(
-              "0111", // You can replace this with dynamic content
-              style: TextStyle(
-                color: Colors.teal,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          // Positioned Icon in the bottom-right corner
-          Align(
-            alignment: Alignment.bottomRight, // Aligns the icon to the bottom-right corner
-            child: Padding(
-              padding: const EdgeInsets.all(8.0), // Add some padding for spacing
-              child: Icon(
-                isChecked ? Icons.check_circle : Icons.cancel, // Check mark or cancel mark
-                color: isChecked ? Colors.green : Colors.red, // Green for check, red for cancel
-                size: 28, // Size of the icon
-              ),
-            ),
-          ),
-        ],
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(10),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.withOpacity(0.2),
+        spreadRadius: 1,
+        blurRadius: 3,
+        offset: Offset(0, 2),
       ),
-    );
+    ],
+  ),
+  child: Stack(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+  padding: EdgeInsets.all(4.0),
+  decoration: BoxDecoration(
+    color: primaryButton1, // Change this to your desired color
+    borderRadius: BorderRadius.circular(8.0),
+  ),
+  child: Text(
+    "0111",
+    style: TextStyle(
+      color: Colors.white, // Text color
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+    ),
+  ),
+)
+,
+            Spacer(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Icon(
+                isChecked ? Icons.check_circle : Icons.cancel,
+                color: isChecked ? Colors.green : Colors.red,
+                size: 24,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+);
+
+
   }
 }

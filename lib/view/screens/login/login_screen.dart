@@ -12,9 +12,7 @@ class LoginScreen extends StatelessWidget {
       backgroundColor: backgroundColorlightgrey,
       resizeToAvoidBottomInset: true, // Ensure layout resizes when keyboard appears
       body: CurvedLoginScreen(
-        height: 0.5,
-        color: Colors.white,
-        imageUrl: 'https://shorturl.at/dtmRa',
+        
       ),
     );
   }

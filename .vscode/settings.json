@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/Users/bhara/Documents/surabhi/windows/runner"
+    "cmake.sourceDirectory": "C:/Users/bhara/Documents/surabhi/windows/runner",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

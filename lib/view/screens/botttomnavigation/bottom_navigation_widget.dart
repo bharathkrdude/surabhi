@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/controller/user/userController.dart';
 import 'package:surabhi/view/screens/bookscreen/screen_maintain.dart';
 import 'package:surabhi/view/screens/botttomnavigation/constants.dart';
 import 'package:surabhi/view/screens/login/login_screen.dart';
 import 'package:surabhi/view/screens/profile/profile_screen.dart';
+import 'package:surabhi/view/widgets/qr_code_widget.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({super.key});
@@ -14,10 +16,10 @@ class BottomNavigationWidget extends StatefulWidget {
 
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   int _currentIndex = 0;
-
+final UserController _userController = UserController();
   final List<Widget> _screens = [
    ScreenMaintain(),
-    const LoginScreen(),
+    QRCodeScannerPage(),
     ProfilePage(),
   ];
 
@@ -100,13 +102,10 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.person,color: primaryButton,size: 26,),
-                title: const Text('Profile',style: TextStyles.drawerText,),
+                leading: const Icon(Icons.logout,color: primaryButton,size: 26,),
+                title: const Text('Logout',style: TextStyles.drawerText,),
                 onTap: () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _currentIndex = 3;
-                  });
+                  _userController.logout(context);
                 },
               ),
             ],

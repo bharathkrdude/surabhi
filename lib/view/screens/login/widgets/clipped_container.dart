@@ -1,40 +1,34 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/view/screens/main/screen_main.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
+const baseUrl = 'https://esmagroup.online/surabhi/api/v1/';
+const postLoginUrl = 'https://esmagroup.online/surabhi/api/v1/login';
 
 class CurvedLoginScreen extends StatelessWidget {
-  final double height;
-  final Color color;
-  final String imageUrl;
-
-  const CurvedLoginScreen({
-    Key? key,
-    this.height = 0.3, // Adjusted height to a smaller value
-    this.color = Colors.blue,
-    this.imageUrl = "https://shorturl.at/dtmRa",
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView( // Moved SingleChildScrollView here to cover entire page
+    return SingleChildScrollView(
       child: Column(
         children: [
           ClipPath(
             clipper: SmoothClipper(),
             child: Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * height, // Smaller height for the top container
-              color: color,
+              height: MediaQuery.of(context).size.height * 0.5,
+              color: white,
               child: Center(
-                child: Image.asset(logo,height: 200,width: 100,),
+                child: Image.asset('assets/images/surbhi_logo-removebg-preview.png', height: 200, width: 100),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: const LoginForm(),
+           Padding(
+            padding: EdgeInsets.all(8.0),
+            child: LoginForm(),
           ),
         ],
       ),
@@ -42,52 +36,75 @@ class CurvedLoginScreen extends StatelessWidget {
   }
 }
 
-class SmoothClipper extends CustomClipper<Path> {
+class LoginForm extends StatefulWidget {
   @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(0, size.height * 0.9);
-    path.quadraticBezierTo(
-      size.width * 0.25,
-      size.height * 0.95,
-      size.width * 0.5,
-      size.height * 0.9,
-    );
-    path.quadraticBezierTo(
-      size.width * 0.75,
-      size.height * 0.85,
-      size.width,
-      size.height * 0.9,
-    );
-    path.lineTo(size.width, 0);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+  _LoginFormState createState() => _LoginFormState();
 }
 
-class LoginForm extends StatelessWidget {
-  const LoginForm({
-    super.key,
-  });
+class _LoginFormState extends State<LoginForm> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse(postLoginUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final token = data['token']; // Assuming the response contains the token
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', token);
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const ScreenMain()),
+        );
+      } else {
+        setState(() {
+          _errorMessage = 'Login failed. Please check your credentials.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred. Please try again.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
+            controller: _emailController,
             decoration: InputDecoration(
-              labelText: 'Full Name',
-              prefixIcon: const Icon(Icons.person, color: primaryButton),
+              labelText: 'Email',
+              prefixIcon: const Icon(Icons.email, color: primaryButton),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           const SizedBox(height: 16),
           TextField(
+            controller: _passwordController,
             obscureText: true,
             decoration: InputDecoration(
               labelText: 'Password',
@@ -96,50 +113,56 @@ class LoginForm extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              SizedBox(
-                width: 24,
-                height: 24,
-                child: Checkbox(
-                  value: false,
-                  onChanged: (value) {},
-                  shape: const CircleBorder(),
-                ),
+          if (_errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text(
+                _errorMessage!,
+                style: const TextStyle(color: Colors.red),
               ),
-              const Text('Remember Me', style: TextStyle(color: Colors.grey)),
-              const Spacer(),
-              const Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: PrimaryButtonWidget(
-              title: "login", 
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ScreenMain(),
+            ),
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PrimaryButtonWidget(
+                    title: "Login",
+                    onPressed: _login,
                   ),
-                );
-              }
-            ),
-          ),
+                ),
           const SizedBox(height: 20),
-          Center(
-            child: RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.grey),
-                children: [
-                  TextSpan(text: "Don't have an account? "),
-                  TextSpan(text: 'Sign up', style: TextStyle(color: Colors.blue)),
-                ],
-              ),
-            ),
-          ),
+          
         ],
       ),
     );
   }
+}
+
+
+class SmoothClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.lineTo(0, size.height * 0.9);
+    
+    path.quadraticBezierTo(
+      size.width * 0.25,
+      size.height * 0.95,
+      size.width * 0.5,
+      size.height * 0.9,
+    );
+
+    path.quadraticBezierTo(
+      size.width * 0.75,
+      size.height * 0.85,
+      size.width,
+      size.height * 0.9,
+    );
+
+    path.lineTo(size.width, 0);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
