@@ -1,23 +1,15 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 class UserModel {
-  static const String _tokenKey = 'auth_token';
+  String? token;
+  String? name;
+  String? email;
 
-  // Save token
-  Future<void> saveToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, token);
-  }
+  UserModel({this.token, this.name, this.email});
 
-  // Get token
-  Future<String?> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_tokenKey);
-  }
-
-  // Clear token (for logout)
-  Future<void> clearToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      token: json['token'],
+      name: json['name'],
+      email: json['email'],
+    );
   }
 }

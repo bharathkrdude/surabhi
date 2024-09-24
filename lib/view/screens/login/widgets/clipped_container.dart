@@ -1,3 +1,4 @@
+ 
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +8,7 @@ import 'package:surabhi/view/screens/main/screen_main.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 const baseUrl = 'https://esmagroup.online/surabhi/api/v1/';
-const postLoginUrl = 'https://esmagroup.online/surabhi/api/v1/login';
+const postLoginUrl = baseUrl + 'login';
 
 class CurvedLoginScreen extends StatelessWidget {
   @override
@@ -22,11 +23,12 @@ class CurvedLoginScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.5,
               color: white,
               child: Center(
-                child: Image.asset('assets/images/surbhi_logo-removebg-preview.png', height: 200, width: 100),
+                child: Image.asset('assets/images/surbhi_logo-removebg-preview.png',
+                    height: 200, width: 100),
               ),
             ),
           ),
-           Padding(
+          Padding(
             padding: EdgeInsets.all(8.0),
             child: LoginForm(),
           ),
@@ -45,6 +47,7 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true; // For toggling password visibility
   String? _errorMessage;
 
   Future<void> _login() async {
@@ -52,6 +55,15 @@ class _LoginFormState extends State<LoginForm> {
       _isLoading = true;
       _errorMessage = null;
     });
+
+    // Basic validation
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Email and password cannot be empty.';
+      });
+      return;
+    }
 
     try {
       final response = await http.post(
@@ -65,7 +77,8 @@ class _LoginFormState extends State<LoginForm> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final token = data['token']; // Assuming the response contains the token
+        final token = data['token']; // Ensure the response has 'token'
+        
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', token);
 
@@ -105,11 +118,19 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 16),
           TextField(
             controller: _passwordController,
-            obscureText: true,
+            obscureText: _obscurePassword,
             decoration: InputDecoration(
               labelText: 'Password',
               prefixIcon: const Icon(Icons.lock, color: primaryButton),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              suffixIcon: IconButton(
+                icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -131,20 +152,18 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
           const SizedBox(height: 20),
-          
         ],
       ),
     );
   }
 }
 
-
 class SmoothClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
     path.lineTo(0, size.height * 0.9);
-    
+
     path.quadraticBezierTo(
       size.width * 0.25,
       size.height * 0.95,
@@ -165,4 +184,5 @@ class SmoothClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
+} 
+

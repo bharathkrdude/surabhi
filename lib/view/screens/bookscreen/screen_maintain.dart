@@ -4,47 +4,41 @@ import 'package:surabhi/view/screens/login/widgets/textbutton_widget.dart';
 import 'package:surabhi/view/screens/maintainanceDetail/widget/bookng_card_widget.dart';
 
 class ScreenMaintain extends StatelessWidget {
-  const ScreenMaintain({super.key});
+  const ScreenMaintain({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColorgrey,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.7),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: TextButtonWidget(),
-                  ),
-                ],
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: TextButtonWidget(),
               ),
-              // GridView for 4 items per row
-              GridView.count(
-                crossAxisCount: 4, // 4 items per row
-                shrinkWrap: true, // Makes the GridView take only necessary space
-                physics: const NeverScrollableScrollPhysics(), // Prevent GridView scrolling inside SingleChildScrollView
-                crossAxisSpacing: 10, // Space between columns
-                mainAxisSpacing: 10, // Space between rows
-                padding: const EdgeInsets.all(10), // Padding around the GridView
-                children: List.generate(8, (index) {
-                  // Example with 8 items
+            ),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 0.8,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                padding: const EdgeInsets.all(16),
+                itemCount: 8,
+                itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () {
-                      // Show a popup dialog when an item is clicked
-                      _showPopup(context, index);
-                    },
-                    child: CustomContainerWithMark(isChecked: index % 2 == 0), // Custom widget for each grid item
+                    onTap: () => _showPopup(context, index),
+                    child: CustomContainerWithMark(isChecked: index % 2 == 0),
                   );
-                }),
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -52,76 +46,65 @@ class ScreenMaintain extends StatelessWidget {
 
   void _showPopup(BuildContext context, int index) {
     showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  contentPadding: EdgeInsets.zero, // Remove default padding
-                  content: BookingCard(index: 1), // Pass index or any required data
-                );
-              },
-            );
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: BookingCard(index: 1),
+        );
+      },
+    );
   }
 }
 
 class CustomContainerWithMark extends StatelessWidget {
-  final bool isChecked; // True for check mark, false for cancel mark
+  final bool isChecked;
 
   const CustomContainerWithMark({Key? key, required this.isChecked}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-  decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(10),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.grey.withOpacity(0.2),
-        spreadRadius: 1,
-        blurRadius: 3,
-        offset: Offset(0, 2),
-      ),
-    ],
-  ),
-  child: Stack(
-    children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-  padding: EdgeInsets.all(4.0),
-  decoration: BoxDecoration(
-    color: primaryButton1, // Change this to your desired color
-    borderRadius: BorderRadius.circular(8.0),
-  ),
-  child: Text(
-    "0111",
-    style: TextStyle(
-      color: Colors.white, // Text color
-      fontSize: 12,
-      fontWeight: FontWeight.normal,
-    ),
-  ),
-)
-,
-            Spacer(),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Icon(
-                isChecked ? Icons.check_circle : Icons.cancel,
-                color: isChecked ? Colors.green : Colors.red,
-                size: 24,
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "0111",
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                  ),
+                  
+                  Expanded(
+                    child: Image.asset(
+                      "assets/images/toilet.png",
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 4),
+            decoration: BoxDecoration(
+              color: isChecked ? Colors.green : Colors.red,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+            ),
+            child: Text(
+              isChecked ? 'Completed' : 'Pending',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
-    ],
-  ),
-);
-
-
+    );
   }
 }

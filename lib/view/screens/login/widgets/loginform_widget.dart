@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/controller/auth/authController.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 class LoginForm extends StatelessWidget {
-  const LoginForm({
+  
+   LoginForm({
     super.key,
   });
-
+final AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/view/screens/botttomnavigation/bottom_navigation_widget.dart';
 
 class ScreenMain extends StatelessWidget {
@@ -8,6 +9,7 @@ class ScreenMain extends StatelessWidget {
   Widget build(BuildContext context) {
     return  const SafeArea(
       child: Scaffold(
+        
        
         bottomNavigationBar: BottomNavigationWidget(),
       ),
