@@ -1,9 +1,11 @@
  
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/controller/auth/authController.dart';
 import 'package:surabhi/view/screens/main/screen_main.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
@@ -29,7 +31,7 @@ class CurvedLoginScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: LoginForm(),
           ),
         ],
@@ -38,77 +40,17 @@ class CurvedLoginScreen extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatefulWidget {
-  @override
-  _LoginFormState createState() => _LoginFormState();
-}
-
-class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
-  bool _obscurePassword = true; // For toggling password visibility
-  String? _errorMessage;
-
-  Future<void> _login() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    // Basic validation
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'Email and password cannot be empty.';
-      });
-      return;
-    }
-
-    try {
-      final response = await http.post(
-        Uri.parse(postLoginUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': _emailController.text,
-          'password': _passwordController.text,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final token = data['token']; // Ensure the response has 'token'
-        
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('auth_token', token);
-
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const ScreenMain()),
-        );
-      } else {
-        setState(() {
-          _errorMessage = 'Login failed. Please check your credentials.';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'An error occurred. Please try again.';
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+class LoginForm extends StatelessWidget {
+  final AuthController authController = Get.find(); // GetX dependency injection
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
+    return Obx(() {
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
-            controller: _emailController,
+            controller: authController.emailController,
             decoration: InputDecoration(
               labelText: 'Email',
               prefixIcon: const Icon(Icons.email, color: primaryButton),
@@ -117,44 +59,47 @@ class _LoginFormState extends State<LoginForm> {
           ),
           const SizedBox(height: 16),
           TextField(
-            controller: _passwordController,
-            obscureText: _obscurePassword,
+            controller: authController.passwordController,
+            obscureText: authController.obscurePassword.value,
             decoration: InputDecoration(
               labelText: 'Password',
               prefixIcon: const Icon(Icons.lock, color: primaryButton),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               suffixIcon: IconButton(
-                icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                icon: Icon(authController.obscurePassword.value ? Icons.visibility : Icons.visibility_off),
                 onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
+                  authController.togglePasswordVisibility();
                 },
               ),
             ),
           ),
           const SizedBox(height: 16),
-          if (_errorMessage != null)
+          if (authController.errorMessage.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                _errorMessage!,
+                authController.errorMessage.value,
                 style: const TextStyle(color: Colors.red),
               ),
             ),
-          _isLoading
+          authController.isLoading.value
               ? const Center(child: CircularProgressIndicator())
               : Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: PrimaryButtonWidget(
                     title: "Login",
-                    onPressed: _login,
+                    onPressed: () {
+                      authController.login(
+                        authController.emailController.text,
+                        authController.passwordController.text,
+                      );
+                    },
                   ),
                 ),
           const SizedBox(height: 20),
         ],
-      ),
-    );
+      );
+    });
   }
 }
 

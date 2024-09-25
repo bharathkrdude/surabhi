@@ -32,7 +32,7 @@ class _UpdateStatusPageState extends State<UpdateStatusPage> {
           
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ImagePickerWidget(),
+            const ImagePickerWidget(),
             DropdownButtonFormField<String>(
               value: _selectedStatus,
               decoration: const InputDecoration(

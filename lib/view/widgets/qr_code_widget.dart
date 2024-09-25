@@ -62,7 +62,7 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> with SingleTicker
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-               SizedBox(),
+               const SizedBox(),
                 Row(
                   children: [
                     IconButton(
@@ -171,11 +171,11 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> with SingleTicker
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Scan Result'),
+          title: const Text('Scan Result'),
           content: Text(result),
           actions: [
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

@@ -19,20 +19,20 @@ final AuthController authController = Get.put(AuthController());
           TextField(
             decoration: InputDecoration(
               labelText: 'Full Name',
-              prefixIcon: Icon(Icons.person, color: primaryButton),
+              prefixIcon: const Icon(Icons.person, color: primaryButton),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextField(
             obscureText: true,
             decoration: InputDecoration(
               labelText: 'Password',
-              prefixIcon: Icon(Icons.lock, color: primaryButton),
+              prefixIcon: const Icon(Icons.lock, color: primaryButton),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             children: [
               SizedBox(
@@ -41,23 +41,23 @@ final AuthController authController = Get.put(AuthController());
                 child: Checkbox(
                   value: false,
                   onChanged: (value) {},
-                  shape: CircleBorder(),
+                  shape: const CircleBorder(),
                 ),
               ),
-              Text('Remember Me', style: TextStyle(color: Colors.grey)),
-              Spacer(),
-              Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
+              const Text('Remember Me', style: TextStyle(color: Colors.grey)),
+              const Spacer(),
+              const Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: PrimaryButtonWidget(title: "login", onPressed: () {}),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Center(
             child: RichText(
-              text: TextSpan(
+              text: const TextSpan(
                 style: TextStyle(color: Colors.grey),
                 children: [
                   TextSpan(text: "Don't have an account? "),

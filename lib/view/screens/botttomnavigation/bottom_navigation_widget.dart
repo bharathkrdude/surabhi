@@ -3,6 +3,7 @@ import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/controller/auth/authController.dart';
 import 'package:surabhi/view/screens/bookscreen/screen_maintain.dart';
 import 'package:surabhi/view/screens/profile/profile_screen.dart';
+import 'package:surabhi/view/screens/test/testDelete.dart';
 import 'package:surabhi/view/widgets/qr_code_widget.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
@@ -15,10 +16,10 @@ class BottomNavigationWidget extends StatefulWidget {
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
-    ScreenMaintain(),
-    Center(child: Text("Bookmarks Page")),
-    QRCodeScannerPage(),
-    Center(child: Text("Alerts Page")),
+     ScreenMaintain(),
+    const TestDelete(),
+    const QRCodeScannerPage(),
+    const Center(child: Text("Alerts Page")),
     ProfilePage(),
   ];
 

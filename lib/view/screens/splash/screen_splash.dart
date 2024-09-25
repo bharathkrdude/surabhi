@@ -40,30 +40,30 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // Check login status
     _checkLoginStatus();
   }
+Future<void> _checkLoginStatus() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-  Future<void> _checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  // Navigate after a delay of 3 seconds
+  Timer(const Duration(seconds: 3), () {
+    if (isLoggedIn) {
+      // If user is logged in, navigate to Main Page
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ScreenMain(),
+        ),
+      );
+    } else {
+      // If not logged in, navigate to Login Page
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+      );
+    }
+  });
+}
 
-    // Navigate after a delay of 3 seconds
-    Timer(const Duration(seconds: 3), () {
-      if (isLoggedIn) {
-        // If user is logged in, navigate to Main Page
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const ScreenMain(),
-          ),
-        );
-      } else {
-        // If not logged in, navigate to Login Page
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const LoginScreen(),
-          ),
-        );
-      }
-    });
-  }
 
   @override
   void dispose() {

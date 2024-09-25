@@ -24,10 +24,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cleaner Profile'),
+        title: const Text('Cleaner Profile'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -37,73 +37,73 @@ class _ProfilePageState extends State<ProfilePage> {
                   radius: 50,
                   backgroundImage: _image != null
                       ? FileImage(_image!)
-                      : AssetImage('assets/default_profile.png') as ImageProvider,
+                      : const AssetImage('assets/default_profile.png') as ImageProvider,
                 ),
                 Positioned(
                   bottom: 0,
                   right: 0,
                   child: IconButton(
-                    icon: Icon(Icons.camera_alt),
+                    icon: const Icon(Icons.camera_alt),
                     onPressed: getImage,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Dennies',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),
+            const Text(
               'ID: CLN12345',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            SizedBox(height: 24),
-            ListTile(
+            const SizedBox(height: 24),
+            const ListTile(
               leading: Icon(Icons.work),
               title: Text('Current Assignment'),
               subtitle: Text('Floor 3, Building B'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.schedule),
               title: Text('Shift'),
               subtitle: Text('8:00 AM - 4:00 PM'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.star),
               title: Text('Performance Rating'),
               subtitle: Text('4.8/5.0'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.cleaning_services),
               title: Text('Areas of Expertise'),
               subtitle: Text('Toilet Cleaning, Floor Mopping, Sanitization'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.event_note),
               title: Text('Tasks Completed Today'),
               subtitle: Text('7/10'),
             ),
             ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Edit Profile'),
-              trailing: Icon(Icons.chevron_right),
+              leading: const Icon(Icons.person),
+              title: const Text('Edit Profile'),
+              trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 // Navigate to edit profile page
               },
             ),
             ListTile(
-              leading: Icon(Icons.report_problem),
-              title: Text('Report Issue'),
-              trailing: Icon(Icons.chevron_right),
+              leading: const Icon(Icons.report_problem),
+              title: const Text('Report Issue'),
+              trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 // Navigate to issue reporting page
               },
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('End Shift'),
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('End Shift'),
               onTap: () {
                 // Implement end shift functionality
               },

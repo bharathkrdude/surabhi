@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/model/toilet/toilet_model.dart';
 import 'package:surabhi/view/screens/update/update_cheklist.dart';
 import 'package:surabhi/view/screens/update/update_status.dart';
 
 class BookingCard extends StatelessWidget {
-  final int index;
+  final ToiletModel toilet;
 
-  const BookingCard({super.key, required this.index});
+  const BookingCard({Key? key, required this.toilet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.9, // Adjust width of dialog content
-      height: MediaQuery.of(context).size.height * 0.6, // Adjust height of dialog content
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: MediaQuery.of(context).size.height * 0.6,
       child: Card(
-        margin: EdgeInsets.zero, // Set margin to zero for the dialog
+        margin: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, // Minimize size to content
+          mainAxisSize: MainAxisSize.min,
           children: [
             Stack(
               children: [
@@ -36,12 +37,12 @@ class BookingCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: toilet.toiletStatus == 'pending' ? Colors.red : Colors.green,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      'Pending',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    child: Text(
+                      toilet.toiletStatus.capitalize(),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
                 ),
@@ -56,7 +57,7 @@ class BookingCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Room$index',
+                        'Room ${toilet.id}',
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Container(
@@ -65,9 +66,9 @@ class BookingCard extends StatelessWidget {
                           color: Colors.purple[100],
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Text(
-                          '#123',
-                          style: TextStyle(color: Colors.purple, fontSize: 12),
+                        child: Text(
+                          '#${toilet.toiletCode}',
+                          style: const TextStyle(color: Colors.purple, fontSize: 12),
                         ),
                       ),
                     ],
@@ -112,11 +113,13 @@ class BookingCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () { Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => UpdateStatusPage(),
-                ),
-              );},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const UpdateStatusPage(),
+                              ),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primaryButton,
                           ),
@@ -126,15 +129,17 @@ class BookingCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () { Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => UpdateChecklist(),
-                ),
-              );},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const UpdateChecklist(),
+                              ),
+                            );
+                          },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: primaryButton,
                           ),
-                          child:  const Text('checklist'),
+                          child: const Text('checklist'),
                         ),
                       ),
                     ],
@@ -146,5 +151,11 @@ class BookingCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }

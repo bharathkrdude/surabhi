@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/controller/toilet/toilet_cotroller.dart';
 import 'package:surabhi/view/screens/login/widgets/textbutton_widget.dart';
 import 'package:surabhi/view/screens/maintainanceDetail/widget/bookng_card_widget.dart';
 
 class ScreenMaintain extends StatelessWidget {
-  const ScreenMaintain({Key? key}) : super(key: key);
+  final ToiletController toiletController = Get.put(ToiletController());
+
+  ScreenMaintain({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,30 +17,40 @@ class ScreenMaintain extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+             Padding(
+              padding: EdgeInsets.all(16.0),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: TextButtonWidget(),
               ),
             ),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 0.8,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                padding: const EdgeInsets.all(16),
-                itemCount: 8,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () => _showPopup(context, index),
-                    child: CustomContainerWithMark(isChecked: index % 2 == 0),
+              child: Obx(() {
+                if (toiletController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      childAspectRatio: 0.8,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    itemCount: toiletController.toilets.length,
+                    itemBuilder: (context, index) {
+                      var toilet = toiletController.toilets[index];
+                      return GestureDetector(
+                        onTap: () => _showPopup(context, index),
+                        child: CustomContainerWithMark(
+                          toiletCode: toilet.toiletCode,
+                          isChecked: toilet.toiletStatus == 'completed',
+                        ),
+                      );
+                    },
                   );
-                },
-              ),
+                }
+              }),
             ),
           ],
         ),
@@ -50,7 +64,7 @@ class ScreenMaintain extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.zero,
-          content: BookingCard(index: 1),
+          content: BookingCard(toilet: toiletController.toilets[index]),
         );
       },
     );
@@ -58,9 +72,14 @@ class ScreenMaintain extends StatelessWidget {
 }
 
 class CustomContainerWithMark extends StatelessWidget {
+  final String toiletCode;
   final bool isChecked;
 
-  const CustomContainerWithMark({Key? key, required this.isChecked}) : super(key: key);
+  const CustomContainerWithMark({
+    Key? key,
+    required this.toiletCode,
+    required this.isChecked,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +95,9 @@ class CustomContainerWithMark extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "0111",
+                    toiletCode,
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                   ),
-                  
                   Expanded(
                     child: Image.asset(
                       "assets/images/toilet.png",
@@ -92,15 +110,15 @@ class CustomContainerWithMark extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             decoration: BoxDecoration(
               color: isChecked ? Colors.green : Colors.red,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(10)),
             ),
             child: Text(
               isChecked ? 'Completed' : 'Pending',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
             ),
           ),
         ],
