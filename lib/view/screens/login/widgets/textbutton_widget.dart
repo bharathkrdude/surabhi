@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:surabhi/constants/colors.dart';
 
 class TextButtonWidget extends StatelessWidget {
-  const TextButtonWidget({super.key});
+  final VoidCallback onPressed; // Accept onPressed as a parameter
+
+  const TextButtonWidget({
+    Key? key,
+    required this.onPressed, required String text, // Make onPressed required
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +23,8 @@ class TextButtonWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextButton.icon(
-        style: const ButtonStyle(  ),
-        onPressed: () {
-          // Your onPressed functionality
-        },
+        style: const ButtonStyle(),
+        onPressed: onPressed, // Use the passed onPressed function
         icon: const Icon(
           Icons.short_text_sharp, // Filter icon
           color: primaryButton,

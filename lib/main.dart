@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surabhi/controller/auth/authController.dart';
+import 'package:surabhi/controller/checklist/checklist_controller.dart';
 import 'package:surabhi/view/screens/login/login_screen.dart';
 import 'package:surabhi/view/screens/main/screen_main.dart';
 import 'package:surabhi/view/screens/splash/screen_splash.dart';
 
 void main() {
+  Get.put(ChecklistController());
   Get.put(AuthController()); // Ensure AuthController is initialized
   runApp(const MyApp());
 }

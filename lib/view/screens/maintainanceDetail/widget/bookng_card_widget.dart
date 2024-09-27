@@ -132,7 +132,7 @@ class BookingCard extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const UpdateChecklist(),
+                                builder: (context) => UpdateChecklist(toiletId: toilet.id,)
                               ),
                             );
                           },

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:surabhi/view/screens/update/widget/complaint_card-widget.dart';
+import 'package:surabhi/view/screens/update/widget/question_card.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 class UpdateChecklist extends StatefulWidget {
-  const UpdateChecklist({Key? key}) : super(key: key);
+  const UpdateChecklist({Key? key, required int toiletId}) : super(key: key);
 
   @override
   _UpdateChecklistState createState() => _UpdateChecklistState();
@@ -10,7 +12,7 @@ class UpdateChecklist extends StatefulWidget {
 
 class _UpdateChecklistState extends State<UpdateChecklist> {
   // Store answers for each question (null, 'yes', 'no')
-  List<String?> _answers = List.generate(6, (_) => null);
+  final List<String?> _answers = List.generate(6, (_) => null);
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +26,38 @@ class _UpdateChecklistState extends State<UpdateChecklist> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildQuestionCard(0, 'Is the wasroom clean?'),
-              _buildQuestionCard(1, 'Is the property broken or damaged?'),
-              _buildQuestionCard(2, 'Do you find this checklist helpful?'),
-              _buildQuestionCard(3, 'Are all lights working?'),
-              _buildQuestionCard(4, 'Is the floor clean?'),
-              _buildQuestionCard(5, 'Is the furniture in good condition?'),
+              QuestionCard(
+                question: 'Is the wasroom clean?',
+                answer: _answers[0],
+                onAnswerSelected: (answer) => _setAnswer(0, answer),
+              ),
+              QuestionCard(
+                question: 'Is the property broken or damaged?',
+                answer: _answers[1],
+                onAnswerSelected: (answer) => _setAnswer(1, answer),
+              ),
+              QuestionCard(
+                question: 'Do you find this checklist helpful?',
+                answer: _answers[2],
+                onAnswerSelected: (answer) => _setAnswer(2, answer),
+              ),
+              QuestionCard(
+                question: 'Are all lights working?',
+                answer: _answers[3],
+                onAnswerSelected: (answer) => _setAnswer(3, answer),
+              ),
+              QuestionCard(
+                question: 'Is the floor clean?',
+                answer: _answers[4],
+                onAnswerSelected: (answer) => _setAnswer(4, answer),
+              ),
+              QuestionCard(
+                question: 'Is the furniture in good condition?',
+                answer: _answers[5],
+                onAnswerSelected: (answer) => _setAnswer(5, answer),
+              ),
               const SizedBox(height: 20),
+              const ComplaintCard(complaintText: "dddddididididi", date: "9/10/2024"),
               PrimaryButtonWidget(
                 title: "Submit",
                 onPressed: _submitChecklist, // Ensure all questions are answered
@@ -42,56 +69,11 @@ class _UpdateChecklistState extends State<UpdateChecklist> {
     );
   }
 
-  // Build each question with Yes/No buttons
-  Widget _buildQuestionCard(int index, String question) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16), // Adds space between questions
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(question, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _buildAnswerButton(index, 'Yes', _answers[index] == 'yes'),
-              const SizedBox(width: 10),
-              _buildAnswerButton(index, 'No', _answers[index] == 'no'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Build Yes/No button with selected state
-  Widget _buildAnswerButton(int index, String label, bool isSelected) {
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          _answers[index] = label.toLowerCase(); // Set the answer to yes or no
-        });
-      },
-      style: ElevatedButton.styleFrom(
-        primary: isSelected ? Colors.green : Colors.grey[300],
-        onPrimary: isSelected ? Colors.white : Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      child: Text(label),
-    );
+  // Helper function to set answers
+  void _setAnswer(int index, String answer) {
+    setState(() {
+      _answers[index] = answer;
+    });
   }
 
   // Submit checklist and ensure all questions are answered
@@ -99,15 +81,14 @@ class _UpdateChecklistState extends State<UpdateChecklist> {
     bool allAnswered = _answers.every((answer) => answer != null);
 
     if (allAnswered) {
-      // Proceed with submission logic (e.g., send data to API)
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Checklist submitted successfully!')),
       );
     } else {
-      // Show error if not all questions are answered
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please answer all questions.')),
       );
     }
   }
 }
+
