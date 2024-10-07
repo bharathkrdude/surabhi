@@ -5,7 +5,7 @@ import 'package:surabhi/view/screens/update/update_cheklist.dart';
 import 'package:surabhi/view/screens/update/update_status.dart';
 
 class BookingCard extends StatelessWidget {
-  final ToiletModel toilet;
+  final Toilet toilet;
 
   const BookingCard({Key? key, required this.toilet}) : super(key: key);
 

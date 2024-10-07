@@ -5,10 +5,10 @@
 // import 'package:surabhi/model/toilet/toilet_model.dart';
 // import 'package:surabhi/view/screens/maintainanceDetail/widget/bookng_card_widget.dart';
 
-// class ScreenMaintain extends StatelessWidget {
+// class ScreenMaintains extends StatelessWidget {
 //   final ToiletController toiletController = Get.put(ToiletController());
 
-//   ScreenMaintain({Key? key}) : super(key: key);
+//   ScreenMaintains({Key? key}) : super(key: key);
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@
 //     );
 //   }
 
-//   void _showPopup(BuildContext context, ToiletModel toilet) {
+//   void _showPopup(BuildContext context, Toilet toilet) {
 //     showDialog(
 //       context: context,
 //       builder: (BuildContext context) {
@@ -70,7 +70,7 @@
 // }
 
 // class ToiletCard extends StatelessWidget {
-//   final ToiletModel toilet;
+//   final Toilet toilet;
 
 //   const ToiletCard({Key? key, required this.toilet}) : super(key: key);
 

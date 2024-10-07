@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/controller/auth/authController.dart';
 import 'package:surabhi/view/screens/bookscreen/screen_maintain.dart';
+import 'package:surabhi/view/screens/maintainanceDetail/maintanance_details.dart';
 import 'package:surabhi/view/screens/profile/profile_screen.dart';
 import 'package:surabhi/view/screens/test/testDelete.dart';
 import 'package:surabhi/view/widgets/qr_code_widget.dart';
@@ -33,25 +34,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColorgrey,
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        backgroundColor: white,
-        toolbarHeight: 50, // Increased toolbar height
-        actions: [
-          Builder(
-            builder: (context) => Padding(
-              padding: const EdgeInsets.only(right: 16.0), // Adjusted padding for menu
-              child: IconButton(
-                iconSize: 40, // Increased icon size
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openEndDrawer();
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
+      
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,
