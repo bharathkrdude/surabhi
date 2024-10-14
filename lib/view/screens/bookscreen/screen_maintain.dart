@@ -2,7 +2,6 @@
 // import 'package:get/get.dart';
 // import 'package:surabhi/constants/colors.dart';
 // import 'package:surabhi/controller/toilet/toilet_cotroller.dart';
-// import 'package:surabhi/model/toilet/toilet_model.dart';
 // import 'package:surabhi/view/screens/login/widgets/textbutton_widget.dart';
 // import 'package:surabhi/view/screens/maintainanceDetail/widget/bookng_card_widget.dart';
 
@@ -123,7 +122,9 @@
 //           borderRadius: BorderRadius.circular(8),
 //         ),
 //         child: DropdownButton<String>(
-//           value: toiletController.selectedCluster.value,
+//           value: toiletController.selectedCluster.value.isEmpty
+//               ? null
+//               : toiletController.selectedCluster.value,
 //           hint: Text("Choose a cluster"),
 //           isExpanded: true,
 //           icon: Icon(Icons.arrow_drop_down, color: primaryColor),
@@ -176,7 +177,8 @@
 //         Expanded(
 //           child: ElevatedButton.icon(
 //             onPressed: () {
-//               toiletController.clearFilters();
+//               toiletController.clearFilters();  // Clears selected filters
+//               toiletController.fetchToilets();  // Re-fetch without filters
 //               Get.back();
 //             },
 //             icon: Icon(Icons.clear),
@@ -195,14 +197,14 @@
 //         Expanded(
 //           child: ElevatedButton.icon(
 //             onPressed: () {
-//               toiletController.fetchToilets(applyFilters: true);
-//               Get.back();
+//               toiletController.fetchToilets(applyFilters: true);  // Fetch with filters
+//               Get.back();  // Close bottom sheet
 //             },
 //             icon: Icon(Icons.filter_list),
 //             label: Text('Apply Filters'),
 //             style: ElevatedButton.styleFrom(
 //               foregroundColor: Colors.white,
-//               backgroundColor: primaryButton,
+//               backgroundColor: primaryColor,
 //               padding: EdgeInsets.symmetric(vertical: 12),
 //               shape: RoundedRectangleBorder(
 //                 borderRadius: BorderRadius.circular(8),
@@ -383,10 +385,18 @@
 // }
 
 
+
+//last updated
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:surabhi/constants/colors.dart';
 
+import '../../../controller/toilet/toilet_cotroller.dart';
+
 class ScreenMaintain extends StatelessWidget {
+   ScreenMaintain({super.key});
+final ToiletController toiletController = Get.put(ToiletController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -394,7 +404,7 @@ class ScreenMaintain extends StatelessWidget {
         surfaceTintColor: Colors.white,
         backgroundColor: white,
         toolbarHeight: 80, // Increased toolbar height
-        title: Center(child: Text("Task List",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),)),
+        title: const Center(child: Text("Task List",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),)),
       ),
       backgroundColor: Colors.grey[200],
       body: SafeArea(
@@ -406,7 +416,7 @@ class ScreenMaintain extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {},
-                  child: Text("Filter"),
+                  child: const Text("Filter"),
                 ),
               ),
             ),
@@ -440,10 +450,10 @@ class CustomContainerWithMark extends StatelessWidget {
   final bool isChecked;
 
   const CustomContainerWithMark({
-    Key? key,
+    super.key,
     required this.toiletCode,
     required this.isChecked,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -460,7 +470,7 @@ class CustomContainerWithMark extends StatelessWidget {
                 children: [
                   Text(
                     toiletCode,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                   ),
                   Expanded(
                     child: Image.asset(

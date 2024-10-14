@@ -51,6 +51,10 @@ Future<void> login(String email, String password) async {
   }
   isLoading.value = false;
 }
+ static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
   // Logout function
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

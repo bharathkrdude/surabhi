@@ -1,18 +1,18 @@
-class Toilet {
+class ToiletModel {
   final int id;
   final String toiletCode;
   final double rating;
   final String toiletStatus;
 
-  Toilet({
+  ToiletModel({
     required this.id,
     required this.toiletCode,
     required this.rating,
     required this.toiletStatus,
   });
 
-  factory Toilet.fromJson(Map<String, dynamic> json) {
-    return Toilet(
+  factory ToiletModel.fromJson(Map<String, dynamic> json) {
+    return ToiletModel(
       id: json['id'],
       toiletCode: json['toilet_code'],
       rating: json['rating'].toDouble(),

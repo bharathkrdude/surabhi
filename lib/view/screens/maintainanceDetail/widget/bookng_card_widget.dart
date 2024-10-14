@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/model/toilet/toilet_model.dart';
 import 'package:surabhi/view/screens/update/update_cheklist.dart';
 import 'package:surabhi/view/screens/update/update_status.dart';
 
 class BookingCard extends StatelessWidget {
-  final Toilet toilet;
+  final ToiletModel toilet;
 
-  const BookingCard({Key? key, required this.toilet}) : super(key: key);
+  BookingCard({
+    Key? key,
+     required this.toilet,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

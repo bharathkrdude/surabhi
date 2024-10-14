@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:surabhi/controller/auth/authController.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final AuthController _authController = AuthController();
   File? _image;
   final picker = ImagePicker();
 
@@ -37,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   radius: 50,
                   backgroundImage: _image != null
                       ? FileImage(_image!)
-                      : const AssetImage('assets/default_profile.png') as ImageProvider,
+                      : const AssetImage('assets/images/logo_surbhi-removebg.png') as ImageProvider,
                 ),
                 Positioned(
                   bottom: 0,
@@ -103,9 +106,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ListTile(
               leading: const Icon(Icons.exit_to_app),
-              title: const Text('End Shift'),
+              title: const Text('Logout'),
               onTap: () {
-                // Implement end shift functionality
+                _authController.logout();
               },
             ),
           ],

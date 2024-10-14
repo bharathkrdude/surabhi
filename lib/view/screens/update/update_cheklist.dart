@@ -57,7 +57,7 @@ class _UpdateChecklistState extends State<UpdateChecklist> {
                 onAnswerSelected: (answer) => _setAnswer(5, answer),
               ),
               const SizedBox(height: 20),
-              const ComplaintCard(complaintText: "dddddididididi", date: "9/10/2024"),
+              const ComplaintCard(complaintText: "Pipe Not Working", date: "9/10/2024"),
               PrimaryButtonWidget(
                 title: "Submit",
                 onPressed: _submitChecklist, // Ensure all questions are answered
