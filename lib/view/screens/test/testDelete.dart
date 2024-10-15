@@ -7,6 +7,7 @@ import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/controller/cluster_controller.dart';
 import 'package:surabhi/controller/toilet/toilet_cotroller.dart';
 import 'package:surabhi/view/screens/login/widgets/textbutton_widget.dart';
+import 'package:surabhi/view/screens/update/update_cheklist.dart';
 
 class Cluster {
   final int id;
@@ -87,13 +88,14 @@ class ScreenMaintainTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    toiletController.fetchToilets(initialFetch: true);
     return Scaffold(
-      backgroundColor: backgroundColorgrey,
+      backgroundColor: Colors.grey[200],  // You can replace this with your backgroundColorgrey variable
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: TextButtonWidget(onPressed: _showFilterBottomSheet, text: 'Filter'),
@@ -118,8 +120,8 @@ class ScreenMaintainTest extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final toilet = toiletController.toilets[index];
                       return GestureDetector(
-                        onTap: () => _showPopup(context, toilet),
-                        child: CustomContainerWithMark(
+                        onTap: () => Get.to(UpdateChecklist(toiletId: toilet.id)),
+                        child: ToiletCardWidget(
                           toiletCode: toilet.toiletCode,
                           isChecked: toilet.toiletStatus != 'pending',
                         ),
@@ -363,11 +365,11 @@ Widget _buildClusterDropdown(Color primaryColor) {
   }
 }
 
-class CustomContainerWithMark extends StatelessWidget {
+class ToiletCardWidget extends StatelessWidget {
   final String toiletCode;
   final bool isChecked;
 
-  const CustomContainerWithMark({
+  const ToiletCardWidget({
     Key? key,
     required this.toiletCode,
     required this.isChecked,

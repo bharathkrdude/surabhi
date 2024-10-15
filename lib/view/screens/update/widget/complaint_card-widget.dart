@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:surabhi/constants/colors.dart';
 
 class ComplaintCard extends StatelessWidget {
   final String complaintText;
@@ -16,8 +17,9 @@ class ComplaintCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8,
-      margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+      surfaceTintColor: white,
+      elevation: 4,
+      
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -88,7 +90,7 @@ class ComplaintCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  complaintText,
+                  "${complaintText}",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,

@@ -13,7 +13,7 @@ class UpdateStatusPage extends StatefulWidget {
 
 class _UpdateStatusPageState extends State<UpdateStatusPage> {
   String _selectedStatus = 'Pending';
-  final List<String> _statusOptions = ['Pending', 'In Progress', 'Completed'];
+  final List<String> _statusOptions = ['Pending', 'Completed'];
 
   void _submit() {
     // Implement your submit logic here

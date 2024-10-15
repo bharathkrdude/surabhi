@@ -21,7 +21,7 @@ class ChecklistController extends GetxController {
 
   Future<String?> getAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token');
+    return prefs.getString('token');
   }
 
   Future<void> fetchChecklist(int toiletId) async {
