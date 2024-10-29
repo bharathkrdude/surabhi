@@ -391,22 +391,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/model/cheklist/complaint_model.dart';
+import 'package:surabhi/view/screens/login/widgets/textbutton_widget.dart';
+import 'package:surabhi/view/screens/maintainanceDetail/widget/toilet_card_widget.dart';
+import 'package:surabhi/view/screens/test/testDelete.dart';
 
 import '../../../controller/toilet/toilet_cotroller.dart';
 
 class ScreenMaintain extends StatelessWidget {
    ScreenMaintain({super.key});
-final ToiletController toiletController = Get.put(ToiletController());
+ final ToiletController toiletController = Get.put(ToiletController());
+
   @override
   Widget build(BuildContext context) {
+    toiletController.fetchToilets(initialFetch: true);
     return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        backgroundColor: white,
-        toolbarHeight: 80, // Increased toolbar height
-        title: const Center(child: Text("Task List",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),)),
-      ),
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey[200],  // You can replace this with your backgroundColorgrey variable
       body: SafeArea(
         child: Column(
           children: [
@@ -414,35 +414,265 @@ final ToiletController toiletController = Get.put(ToiletController());
               padding: const EdgeInsets.all(16.0),
               child: Align(
                 alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text("Filter"),
-                ),
+                child: TextButtonWidget(onPressed: _showFilterBottomSheet, text: 'Filter'),
               ),
             ),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 0.8,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                padding: const EdgeInsets.all(16),
-                itemCount: 10, // Placeholder item count
-                itemBuilder: (context, index) {
-                  return CustomContainerWithMark(
-                    toiletCode: 'T${index + 1}',
-                    isChecked: index % 2 == 0,
+              child: Obx(() {
+                if (toiletController.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (toiletController.toilets.isEmpty) {
+                  return Center(child: Text('No toilets found. Try adjusting your filters.'));
+                } else {
+                  return GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      childAspectRatio: 0.8,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    itemCount: toiletController.toilets.length,
+                    itemBuilder: (context, index) {
+                      final toilet = toiletController.toilets[index];
+                      return GestureDetector(
+                        onTap: () => Get.to(ChecklistScreen(toiletId: toilet.id)),
+                        child: ToiletCardWidget(
+                          toiletCode: toilet.toiletCode,
+                          isChecked: toilet.toiletStatus != 'pending',
+                        ),
+                      );
+                    },
                   );
-                },
-              ),
+                }
+              }),
             ),
           ],
         ),
       ),
     );
   }
+
+
+
+  void _showFilterBottomSheet() {
+    final theme = Get.theme;
+    final primaryColor = theme.primaryColor;
+
+    Get.bottomSheet(
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: ListView(
+          padding: EdgeInsets.all(24),
+          children: [
+            Text(
+              "Filter Options",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                letterSpacing: 0.5,
+              ),
+            ),
+            SizedBox(height: 24),
+            _buildSectionTitle("Select Cluster"),
+            SizedBox(height: 12),
+           ClusterDropdown(
+              onChanged: (int? selectedClusterId) {
+                // Handle the selected cluster ID here
+                print('Selected Cluster ID: $selectedClusterId');
+              },
+            ),
+            SizedBox(height: 24),
+            _buildSectionTitle("Status"),
+            SizedBox(height: 12),
+            _buildStatusRadioButtons(),
+            SizedBox(height: 32),
+            _buildFilterButtons(primaryColor),
+          ],
+        ),
+      ),
+    );
+  }
+Widget _buildClusterDropdown(Color primaryColor) {
+  return Obx(() => Container(
+    padding: EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration(
+      border: Border.all(color: primaryColor),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: DropdownButton<Cluster>(
+      value: toiletController.selectedCluster.value,
+      hint: Text("Choose a cluster"),
+      isExpanded: true,
+      icon: Icon(Icons.arrow_drop_down, color: primaryColor),
+      underline: SizedBox(),
+      items: toiletController.clusters.map((Cluster cluster) {
+        return DropdownMenuItem<Cluster>(
+          value: cluster,
+          child: Text(cluster.clusterName),  // Use cluster name for display
+        );
+      }).toList(),
+      onChanged: (Cluster? value) {
+        if (value != null) {
+          toiletController.updateCluster(value);
+          Get.back();  // Close the dropdown
+        }
+      },
+    ),
+  ));
+}
+
+
+  Widget _buildStatusRadioButtons() {
+    return Obx(() => Column(
+      children: [
+        _buildCustomRadioTile(
+          title: 'All',
+          value: 'All',
+          groupValue: toiletController.selectedStatus.value,
+          onChanged: (value) {
+            toiletController.updateStatus(value!);
+            Get.back();
+          },
+          icon: Icons.all_inclusive,
+        ),
+        SizedBox(height: 8),
+        _buildCustomRadioTile(
+          title: 'Completed',
+          value: 'Completed',
+          groupValue: toiletController.selectedStatus.value,
+          onChanged: (value) {
+            toiletController.updateStatus(value!);
+            Get.back();
+          },
+          icon: Icons.check_circle,
+        ),
+        SizedBox(height: 8),
+        _buildCustomRadioTile(
+          title: 'Pending',
+          value: 'Pending',
+          groupValue: toiletController.selectedStatus.value,
+          onChanged: (value) {
+            toiletController.updateStatus(value!);
+            Get.back();
+          },
+          icon: Icons.pending,
+        ),
+      ],
+    ));
+  }
+
+  Widget _buildFilterButtons(Color primaryColor) {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () {
+              toiletController.selectedCluster.value = Cluster(id: 0, clusterName: 'All Clusters', clusterCode: '');
+              toiletController.selectedStatus.value = 'All';
+              toiletController.fetchToilets();
+              Get.back();
+            },
+            icon: Icon(Icons.clear),
+            label: Text('Clear Filters'),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.black87,
+              backgroundColor: Colors.grey[300],
+              padding: EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 16),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () {
+              toiletController.fetchToilets();
+              Get.back();
+            },
+            icon: Icon(Icons.filter_list),
+            label: Text('Apply Filters'),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: primaryButton,
+              padding: EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+    );
+  }
+
+  Widget _buildCustomRadioTile({
+    required String title,
+    required String value,
+    required String? groupValue,
+    required Function(String?) onChanged,
+    required IconData icon,
+  }) {
+    final isSelected = value == groupValue;
+    final color = isSelected ? Get.theme.primaryColor : Colors.grey;
+
+    return InkWell(
+      onTap: () => onChanged(value),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: color),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color),
+            SizedBox(width: 12),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                color: isSelected ? Get.theme.primaryColor : Colors.black87,
+              ),
+            ),
+            Spacer(),
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+              color: color,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+
 }
 
 class CustomContainerWithMark extends StatelessWidget {
@@ -499,4 +729,12 @@ class CustomContainerWithMark extends StatelessWidget {
       ),
     );
   }
+
+
+
+
+
+  
+
 }
+

@@ -7,11 +7,11 @@ class PrimaryButtonWidget extends StatelessWidget {
   final Icon? icon;
 
   const PrimaryButtonWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.onPressed,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
