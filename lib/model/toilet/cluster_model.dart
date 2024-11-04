@@ -10,10 +10,12 @@ class Cluster {
   });
 
   // Factory constructor to create a Cluster instance from a JSON object
+ 
+
   factory Cluster.fromJson(Map<String, dynamic> json) {
     return Cluster(
       id: json['id'],
-      clusterName: json['cluster_name'],
+      clusterName: json['cluster_name'], // Map to cluster_name
       clusterCode: json['cluster_code'],
     );
   }

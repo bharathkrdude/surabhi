@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:surabhi/constants/colors.dart';
+import 'package:get/get.dart';
 
 class TextButtonWidget extends StatelessWidget {
   final VoidCallback onPressed; // Accept onPressed as a parameter
 
-  const TextButtonWidget({
-    Key? key,
+   const TextButtonWidget({
+    super.key,
     required this.onPressed, required String text, // Make onPressed required
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,25 +17,27 @@ class TextButtonWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-          color: primaryButton,
-          width: 2,
+          color:Get.theme.primaryColor,
+          width: 1,
         ),
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextButton.icon(
         style: const ButtonStyle(),
         onPressed: onPressed, // Use the passed onPressed function
-        icon: const Icon(
+        icon:  Icon(
           Icons.short_text_sharp, // Filter icon
-          color: primaryButton,
+          color:Get.theme.primaryColor,
         ),
-        label: const Text(
+        label:  Text(
           'Filter',
-          style: TextStyle(
-            color: primaryButton,
+          style:  TextStyle(
+            color:  Get.theme.primaryColor,
           ),
         ),
       ),
     );
   }
 }
+
+

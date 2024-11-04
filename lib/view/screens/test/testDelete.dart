@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surabhi/constants/colors.dart';
-import 'package:surabhi/controller/cluster_controller.dart';
 import 'package:surabhi/controller/toilet/toilet_cotroller.dart';
 import 'package:surabhi/model/cheklist/complaint_model.dart';
+import 'package:surabhi/model/toilet/cluster_model.dart';
 import 'package:surabhi/view/screens/login/widgets/textbutton_widget.dart';
+import 'package:surabhi/view/screens/main/widgets/custom_app_bar.dart';
 import 'package:surabhi/view/screens/maintainanceDetail/widget/toilet_card_widget.dart';
-import 'package:surabhi/view/screens/update/update_cheklist.dart';
 
-class Cluster {
-  final int id;
-  final String clusterName;
-  final String clusterCode;
+// class Cluster {
+//   final int id;
+//   final String clusterName;
+//   final String clusterCode;
 
-  Cluster({required this.id, required this.clusterName, required this.clusterCode});
+//   Cluster({required this.id, required this.clusterName, required this.clusterCode});
 
-  factory Cluster.fromJson(Map<String, dynamic> json) {
-    return Cluster(
-      id: json['id'],
-      clusterName: json['cluster_name'],
-      clusterCode: json['cluster_code'],
-    );
-  }
-}
+//   factory Cluster.fromJson(Map<String, dynamic> json) {
+//     return Cluster(
+//       id: json['id'],
+//       clusterName: json['cluster_name'],
+//       clusterCode: json['cluster_code'],
+//     );
+//   }
+// }
 
 class Toilet {
   final int id;
@@ -46,52 +44,56 @@ class Toilet {
 }
  // Import the controller
 
-class ClusterDropdown extends StatelessWidget {
-  final ClusterController clusterController = Get.put(ClusterController());  // Instantiate the controller
-  final Function(int?) onChanged; // Callback to handle selection
+// class ClusterDropdown extends StatelessWidget {
+//   // final ClusterController clusterController = Get.put(ClusterController());  // Instantiate the controller
+//   final Function(int?) onChanged; // Callback to handle selection
 
-  ClusterDropdown({required this.onChanged}); // Constructor to accept callback
+//   ClusterDropdown({required this.onChanged}); // Constructor to accept callback
 
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      // Display loading indicator while fetching data
-      if (clusterController.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Obx(() {
+//       // Display loading indicator while fetching data
+//       if (clusterController.isLoading.value) {
+//         return Center(child: CircularProgressIndicator());
+//       }
 
-      // Check if clusters are loaded and not empty
-      if (clusterController.clusters.isEmpty) {
-        return Text("No clusters available");
-      }
+//       // Check if clusters are loaded and not empty
+//       if (clusterController.clusters.isEmpty) {
+//         return Text("No clusters available");
+//       }
 
-      // Display dropdown with fetched cluster names
-      return DropdownButton<int>(
-        isExpanded: true,
-        value: clusterController.clusters.isNotEmpty ? clusterController.clusters[0].id : null,
-        onChanged: (int? newValue) {
-          print('Selected cluster ID: $newValue');
-          onChanged(newValue); // Call the provided callback with the selected value
-        },
-        items: clusterController.clusters.map((cluster) {
-          return DropdownMenuItem<int>(
-            value: cluster.id,
-            child: Text(cluster.clusterName),
-          );
-        }).toList(),
-      );
-    });
-  }
-}
+//       // Display dropdown with fetched cluster names
+//       return DropdownButton<int>(
+//         isExpanded: true,
+//         value: clusterController.clusters.isNotEmpty ? clusterController.clusters[0].id : null,
+//         onChanged: (int? newValue) {
+//           print('Selected cluster ID: $newValue');
+//           onChanged(newValue); // Call the provided callback with the selected value
+//         },
+//         items: clusterController.clusters.map((cluster) {
+//           return DropdownMenuItem<int>(
+//             value: cluster.id,
+//             child: Text(cluster.clusterName),
+//           );
+//         }).toList(),
+//       );
+//     });
+//   }
+// }
 
 
 class ScreenMaintainTest extends StatelessWidget {
   final ToiletController toiletController = Get.put(ToiletController());
 
+ ScreenMaintainTest({super.key});
+ 
   @override
   Widget build(BuildContext context) {
     toiletController.fetchToilets(initialFetch: true);
+    toiletController.fetchClusters();
     return Scaffold(
+      appBar: const CustomAppBar(title: 'Toilets'),
       backgroundColor: Colors.grey[200],  // You can replace this with your backgroundColorgrey variable
       body: SafeArea(
         child: Column(
@@ -105,6 +107,7 @@ class ScreenMaintainTest extends StatelessWidget {
             ),
             Expanded(
               child: Obx(() {
+                
                 if (toiletController.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
                 } else if (toiletController.toilets.isEmpty) {
@@ -122,7 +125,7 @@ class ScreenMaintainTest extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final toilet = toiletController.toilets[index];
                       return GestureDetector(
-                        onTap: () => Get.to(ChecklistScreen(toiletId: toilet.id)),
+                        onTap: () => Get.to(ChecklistScreen(toiletId: toilet.id, toiletCode: toilet.toiletCode,)),
                         child: ToiletCardWidget(
                           toiletCode: toilet.toiletCode,
                           isChecked: toilet.toiletStatus != 'pending',
@@ -142,7 +145,7 @@ class ScreenMaintainTest extends StatelessWidget {
   void _showFilterBottomSheet() {
     final theme = Get.theme;
     final primaryColor = theme.primaryColor;
-
+   
     Get.bottomSheet(
       Container(
         decoration: BoxDecoration(
@@ -172,12 +175,29 @@ class ScreenMaintainTest extends StatelessWidget {
             SizedBox(height: 24),
             _buildSectionTitle("Select Cluster"),
             SizedBox(height: 12),
-           ClusterDropdown(
-              onChanged: (int? selectedClusterId) {
-                // Handle the selected cluster ID here
-                print('Selected Cluster ID: $selectedClusterId');
+          Obx(() {
+            if (toiletController.isLoading.value) {
+              return Center(child: CircularProgressIndicator());  // Show loading indicator
+            }
+
+            return DropdownButton<int>(
+              value: toiletController.selectedCluster.value.id,
+              onChanged: (int? newClusterId) {
+                if (newClusterId != null) {
+                  toiletController.updateClusterById(newClusterId);
+                  // Optionally, close the bottom sheet
+                  Get.back();
+                }
               },
-            ),
+              items: toiletController.clusters.map((Cluster cluster) {
+                return DropdownMenuItem<int>(
+                  value: cluster.id,
+                  child: Text(cluster.clusterName),
+                );
+              }).toList(),
+            );
+          }),
+
             SizedBox(height: 24),
             _buildSectionTitle("Status"),
             SizedBox(height: 12),
@@ -189,34 +209,35 @@ class ScreenMaintainTest extends StatelessWidget {
       ),
     );
   }
-Widget _buildClusterDropdown(Color primaryColor) {
+  Widget _buildClusterDropdown(Color primaryColor) {
   return Obx(() => Container(
     padding: EdgeInsets.symmetric(horizontal: 12),
     decoration: BoxDecoration(
       border: Border.all(color: primaryColor),
       borderRadius: BorderRadius.circular(8),
     ),
-    child: DropdownButton<Cluster>(
-      value: toiletController.selectedCluster.value,
+    child: DropdownButton<int>(
+      value: toiletController.selectedCluster.value.id,  // Use selectedCluster's ID
       hint: Text("Choose a cluster"),
       isExpanded: true,
       icon: Icon(Icons.arrow_drop_down, color: primaryColor),
       underline: SizedBox(),
       items: toiletController.clusters.map((Cluster cluster) {
-        return DropdownMenuItem<Cluster>(
-          value: cluster,
-          child: Text(cluster.clusterName),  // Use cluster name for display
+        return DropdownMenuItem<int>(
+          value: cluster.id,  // Set the cluster ID as value
+          child: Text(cluster.clusterName),  // Display cluster name
         );
       }).toList(),
-      onChanged: (Cluster? value) {
-        if (value != null) {
-          toiletController.updateCluster(value);
+      onChanged: (int? clusterId) {
+        if (clusterId != null) {
+          toiletController.updateClusterById(clusterId);  // Update selected cluster by ID
           Get.back();  // Close the dropdown
         }
       },
     ),
   ));
 }
+
 
 
   Widget _buildStatusRadioButtons() {
@@ -228,29 +249,29 @@ Widget _buildClusterDropdown(Color primaryColor) {
           groupValue: toiletController.selectedStatus.value,
           onChanged: (value) {
             toiletController.updateStatus(value!);
-            Get.back();
+            // Get.back();
           },
           icon: Icons.all_inclusive,
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         _buildCustomRadioTile(
           title: 'Completed',
           value: 'Completed',
           groupValue: toiletController.selectedStatus.value,
           onChanged: (value) {
             toiletController.updateStatus(value!);
-            Get.back();
+            // Get.back();
           },
           icon: Icons.check_circle,
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         _buildCustomRadioTile(
           title: 'Pending',
           value: 'Pending',
           groupValue: toiletController.selectedStatus.value,
           onChanged: (value) {
             toiletController.updateStatus(value!);
-            Get.back();
+            // Get.back();
           },
           icon: Icons.pending,
         ),
@@ -286,7 +307,7 @@ Widget _buildClusterDropdown(Color primaryColor) {
           child: ElevatedButton.icon(
             onPressed: () {
               toiletController.fetchToilets();
-              Get.back();
+           Get.back();
             },
             icon: Icon(Icons.filter_list),
             label: Text('Apply Filters'),
@@ -354,24 +375,13 @@ Widget _buildClusterDropdown(Color primaryColor) {
     );
   }
 
-  void _showPopup(BuildContext context, Toilet toilet) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: BookingCard(toilet: toilet),
-        );
-      },
-    );
-  }
 }
 
 
 class BookingCard extends StatelessWidget {
   final Toilet toilet;
 
-  const BookingCard({Key? key, required this.toilet}) : super(key: key);
+  const BookingCard({super.key, required this.toilet});
 
   @override
   Widget build(BuildContext context) {

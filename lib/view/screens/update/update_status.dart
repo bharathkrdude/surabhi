@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:surabhi/controller/checklist/checklist_controller.dart';
-import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 // class UpdateStatusPage extends StatelessWidget {
 //   final String initialStatus;
@@ -78,20 +77,20 @@ import 'package:surabhi/view/widgets/primary_button_widget.dart';
 //     );
 //   }
 // }
-
 class ImagePickerWidget extends StatelessWidget {
   final ChecklistController controller;
 
   const ImagePickerWidget({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        // First Image
         Container(
           height: 200,
           width: double.infinity,
@@ -99,37 +98,120 @@ class ImagePickerWidget extends StatelessWidget {
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Obx(() => controller.image.value != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    File(controller.image.value!.path),
-                    fit: BoxFit.cover,
-                  ),
+          child: Obx(() => controller.images[0].value != null
+              ? Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(controller.images[0].value!.path),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    ),
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: IconButton(
+                        icon: const Icon(Icons.close, color: Colors.red),
+                        onPressed: () => controller.removeImage(0),
+                      ),
+                    ),
+                  ],
                 )
               : const Center(child: Text('No image selected'))),
         ),
+        const SizedBox(height: 8),
+        ElevatedButton.icon(
+          onPressed: () => _pickImage(ImageSource.camera, 0),
+          icon: const Icon(Icons.camera_alt),
+          label: const Text('Take Picture 1'),
+        ),
+
         const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton.icon(
-              onPressed: () => _pickImage(ImageSource.camera),
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Take Picture'),
-            ),
-            ElevatedButton.icon(
-              onPressed: () => _pickImage(ImageSource.gallery),
-              icon: const Icon(Icons.photo_library),
-              label: const Text('Gallery'),
-            ),
-          ],
+
+        // Second Image
+        Container(
+          height: 200,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Obx(() => controller.images[1].value != null
+              ? Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(controller.images[1].value!.path),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    ),
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: IconButton(
+                        icon: const Icon(Icons.close, color: Colors.red),
+                        onPressed: () => controller.removeImage(1),
+                      ),
+                    ),
+                  ],
+                )
+              : const Center(child: Text('No image selected'))),
+        ),
+        const SizedBox(height: 8),
+        ElevatedButton.icon(
+          onPressed: () => _pickImage(ImageSource.camera, 1),
+          icon: const Icon(Icons.camera_alt),
+          label: const Text('Take Picture 2'),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Third Image
+        Container(
+          height: 200,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Obx(() => controller.images[2].value != null
+              ? Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(controller.images[2].value!.path),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    ),
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: IconButton(
+                        icon: const Icon(Icons.close, color: Colors.red),
+                        onPressed: () => controller.removeImage(2),
+                      ),
+                    ),
+                  ],
+                )
+              : const Center(child: Text('No image selected'))),
+        ),
+        const SizedBox(height: 8),
+        ElevatedButton.icon(
+          onPressed: () => _pickImage(ImageSource.camera, 2),
+          icon: const Icon(Icons.camera_alt),
+          label: const Text('Take Picture 3'),
         ),
       ],
     );
   }
 
-  Future<void> _pickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source, int index) async {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(
@@ -139,7 +221,7 @@ class ImagePickerWidget extends StatelessWidget {
         imageQuality: 85,
       );
       if (image != null) {
-        controller.image.value = File(image.path);
+        controller.setImage(index, File(image.path));
       }
     } catch (e) {
       Get.snackbar(

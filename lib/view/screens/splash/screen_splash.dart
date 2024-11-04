@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surabhi/constants/colors.dart';
+import 'package:surabhi/view/screens/botttomnavigation/bottom_navigation_widget.dart';
 import 'package:surabhi/view/screens/login/login_screen.dart';
 import 'package:surabhi/view/screens/main/screen_main.dart';
 
@@ -50,7 +51,7 @@ Future<void> _checkLoginStatus() async {
       // If user is logged in, navigate to Main Page
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const ScreenMain(),
+          builder: (context) => BottomNavigationWidget(),
         ),
       );
     } else {

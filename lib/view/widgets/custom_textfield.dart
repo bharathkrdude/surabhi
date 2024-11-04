@@ -12,7 +12,7 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.label,
     required this.icon,
     this.prefixText,
@@ -21,7 +21,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     required this.onSaved,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

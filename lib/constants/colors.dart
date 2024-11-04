@@ -14,4 +14,4 @@ const storyBorderColor = [Color(0xFF9B2282), Color(0xFFEEA863)];
 
 String logo = "assets/images/logo_surbhi-removebg.png";
 String logoText = "assets/images/LogoText.png";
-String toilet  = "assets/images/toilet.png";
+String toiletpng  = "assets/images/toilet.png";

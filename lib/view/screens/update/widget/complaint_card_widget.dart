@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:surabhi/constants/colors.dart';
 
 class ComplaintCard extends StatelessWidget {
@@ -8,11 +7,11 @@ class ComplaintCard extends StatelessWidget {
   final String date;
 
   const ComplaintCard({
-    Key? key,
+    super.key,
     required this.complaintText,
     this.image,
     required this.date,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +89,7 @@ class ComplaintCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  "${complaintText}",
+                  complaintText,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:get/get.dart';
+import 'package:surabhi/model/cheklist/complaint_model.dart';
 import 'package:surabhi/constants/colors.dart';
 
 class QRCodeScannerPage extends StatefulWidget {
-  const QRCodeScannerPage({Key? key}) : super(key: key);
+  const QRCodeScannerPage({super.key});
 
   @override
   State<QRCodeScannerPage> createState() => _QRCodeScannerPageState();
@@ -54,7 +56,6 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> with SingleTicker
             ),
           ),
           _buildOverlay(),
-          // Custom header with back button, torch, and switch camera icons
           Positioned(
             top: 40,
             left: 20,
@@ -167,23 +168,14 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> with SingleTicker
   }
 
   void _handleScanResult(String result) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Scan Result'),
-          content: Text(result),
-          actions: [
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    final toiletId = int.tryParse(result);
+    if (toiletId != null) {
+      // Navigate to ChecklistScreen with the scanned toiletId
+      Get.to(() => ChecklistScreen(toiletId: toiletId, toiletCode: '',));
+    } else {
+      // Show error if the scanned code is not a valid ID
+      Get.snackbar('Invalid QR Code', 'The scanned code is not a valid toilet ID');
+    }
   }
 }
 

@@ -1,40 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'cluster_controller.dart';  // Import the controller
+import 'package:surabhi/controller/toilet/toilet_cotroller.dart';
 
-class ClusterDropdownPage extends StatelessWidget {
-  final ClusterController clusterController = Get.put(ClusterController());  // Instantiate the controller
+import 'package:surabhi/model/toilet/cluster_model.dart';
+
+class ClusterDropdown extends StatelessWidget {
+  final ToiletController controller = Get.find<ToiletController>();
+
+   ClusterDropdown({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Select Cluster'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Obx(() {
-          // Display loading indicator while fetching data
-          if (clusterController.isLoading.value) {
-            return Center(child: CircularProgressIndicator());
+    return Obx(() {
+      return DropdownButton<int>(
+        value: controller.selectedCluster.value.id,
+        onChanged: (int? newClusterId) {
+          if (newClusterId != null) {
+            controller.updateClusterById(newClusterId);
           }
-
-          // Display dropdown with fetched cluster names
-          return DropdownButton<int>(
-            isExpanded: true,
-            value: clusterController.clusters.isNotEmpty ? clusterController.clusters[0].id : null,
-            onChanged: (int? newValue) {
-              print('Selected cluster ID: $newValue');
-            },
-            items: clusterController.clusters.map((cluster) {
-              return DropdownMenuItem<int>(
-                value: cluster.id,
-                child: Text(cluster.clusterName),
-              );
-            }).toList(),
+        },
+        items: controller.clusters.map((Cluster cluster) {
+          return DropdownMenuItem<int>(
+            value: cluster.id,
+            child: Text(cluster.clusterName),
           );
-        }),
-      ),
-    );
+        }).toList(),
+      );
+    });
   }
 }

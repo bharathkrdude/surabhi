@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:surabhi/constants/colors.dart';
-import 'package:surabhi/controller/auth/authController.dart';
+import 'package:surabhi/controller/auth/auth_controller.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 class LoginForm extends StatelessWidget {

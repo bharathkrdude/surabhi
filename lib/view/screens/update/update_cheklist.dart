@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:surabhi/view/screens/update/widget/complaint_card-widget.dart';
+import 'package:surabhi/view/screens/update/widget/complaint_card_widget.dart';
 import 'package:surabhi/view/screens/update/widget/question_card.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 class UpdateChecklist extends StatefulWidget {
-  const UpdateChecklist({Key? key, required int toiletId}) : super(key: key);
+  const UpdateChecklist({super.key, required int toiletId});
 
   @override
   _UpdateChecklistState createState() => _UpdateChecklistState();

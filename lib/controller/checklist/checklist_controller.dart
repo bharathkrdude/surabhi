@@ -1,28 +1,25 @@
-
-// checklist_controller.dart 
+// checklist_controller.dart
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surabhi/model/cheklist/checklist_model.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 
 class ChecklistController extends GetxController {
   final checklists = <Checklist>[].obs;
   final complaints = <Complaint>[].obs;
   final isLoading = false.obs;
   final checklistAnswers = <String, String>{}.obs;
-  final images = <File>[].obs;
+  // final images = <File>[].obs;
   final dioClient = dio.Dio();
-final image = Rxn<File>();  
+  final images = List.generate(3, (index) => Rxn<File>());
   Future<String?> _getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
 
-
-    Future<void> fetchChecklistData(int toiletId) async {
+  Future<void> fetchChecklistData(int toiletId) async {
     isLoading.value = true;
     try {
       String? token = await _getToken();
@@ -54,36 +51,30 @@ final image = Rxn<File>();
   // ... fetchChecklistData method remains same ...
 
   void updateChecklistAnswer({required int index, required String value}) {
-    checklistAnswers["checklist[$index]"] = value; // Updated format to match API
+    checklistAnswers["checklist[$index]"] =
+        value; // Updated format to match API
     update();
   }
 
-  Future<void> pickImage() async {
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
-        source: ImageSource.camera,
-        maxWidth: 1800,
-        maxHeight: 1800,
-        imageQuality: 85,
-      );
-      
-      if (image != null) {
-        images.add(File(image.path));
-        update();
-      }
-    } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Failed to pick image: $e",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+  // Replace single image with list of images
+
+  // Method to set image at specific index
+  void setImage(int index, File image) {
+    if (index >= 0 && index < images.length) {
+      images[index].value = image;
     }
   }
 
-  Future<void> submitChecklist({required int toiletId, required String status}) async {
+  // Method to remove image at specific index
+  void removeImage(int index) {
+    if (index >= 0 && index < images.length) {
+      images[index].value = null;
+    }
+  }
+
+  // Update submitChecklist method to handle multiple images
+  Future<void> submitChecklist(
+      {required int toiletId, required String status}) async {
     isLoading.value = true;
     try {
       String? token = await _getToken();
@@ -91,29 +82,28 @@ final image = Rxn<File>();
 
       dioClient.options.headers['Authorization'] = 'Bearer $token';
 
-      // Create form data
       final formData = dio.FormData();
-      
-      // Add toilet_id
+
+      // Add toilet_id and status
       formData.fields.add(MapEntry('toilet_id', toiletId.toString()));
-      
-      // Add status
       formData.fields.add(MapEntry('status', status));
-      
+
       // Add checklist answers
       checklistAnswers.forEach((key, value) {
         formData.fields.add(MapEntry(key, value));
       });
 
-      // Add images if any
+      // Add images
       for (int i = 0; i < images.length; i++) {
-        formData.files.add(MapEntry(
-          'images[]',
-          await dio.MultipartFile.fromFile(
-            images[i].path,
-            filename: 'image_$i.jpg',
-          ),
-        ));
+        if (images[i].value != null) {
+          formData.files.add(MapEntry(
+            'images[]',
+            await dio.MultipartFile.fromFile(
+              images[i].value!.path,
+              filename: 'image_$i.jpg',
+            ),
+          ));
+        }
       }
 
       final response = await dioClient.post(
@@ -123,12 +113,14 @@ final image = Rxn<File>();
 
       if (response.statusCode == 200 && response.data['status'] == true) {
         // Clear images after successful submission
-        images.clear();
+        for (var imageRx in images) {
+          imageRx.value = null;
+        }
         checklistAnswers.clear();
-        
+
         Get.snackbar(
-          "Success", 
-          response.data['message'] ?? "Checklist updated successfully",
+          "Success",
+          "Checklist updated successfully",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white,
@@ -136,7 +128,7 @@ final image = Rxn<File>();
         await fetchChecklistData(toiletId);
       } else {
         Get.snackbar(
-          "Error", 
+          "Error",
           response.data['message'] ?? "Update failed",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
@@ -145,7 +137,7 @@ final image = Rxn<File>();
       }
     } catch (e) {
       Get.snackbar(
-        "Error", 
+        "Error",
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
@@ -155,17 +147,4 @@ final image = Rxn<File>();
       isLoading.value = false;
     }
   }
-
-  void removeImage(int index) {
-    if (index >= 0 && index < images.length) {
-      images.removeAt(index);
-      update();
-    }
-  }
 }
-
-
-
-
-
-

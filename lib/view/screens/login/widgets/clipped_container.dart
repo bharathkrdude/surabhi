@@ -2,15 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surabhi/constants/colors.dart';
-import 'package:surabhi/controller/auth/authController.dart';
+import 'package:surabhi/controller/auth/auth_controller.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 const baseUrl = 'https://esmagroup.online/surabhi/api/v1/';
 const postLoginUrl = baseUrl + 'login';
 
 class CurvedLoginScreen extends StatelessWidget {
+  const CurvedLoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -39,7 +40,9 @@ class CurvedLoginScreen extends StatelessWidget {
 }
 
 class LoginForm extends StatelessWidget {
-  final AuthController authController = Get.find(); // GetX dependency injection
+  final AuthController authController = Get.find();
+
+   LoginForm({super.key}); // GetX dependency injection
 
   @override
   Widget build(BuildContext context) {

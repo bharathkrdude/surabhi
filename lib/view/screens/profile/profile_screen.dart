@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-import 'package:surabhi/controller/auth/authController.dart';
+import 'package:surabhi/controller/auth/auth_controller.dart';
 
 class ProfilePage extends StatefulWidget {
   @override

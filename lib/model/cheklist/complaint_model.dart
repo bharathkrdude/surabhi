@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/controller/checklist/checklist_controller.dart';
 import 'package:surabhi/view/screens/update/update_status.dart';
 import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 class ChecklistScreen extends StatefulWidget {
   final int toiletId;
-
-  const ChecklistScreen({Key? key, required this.toiletId}) : super(key: key);
+  final String toiletCode;
+  const ChecklistScreen(
+      {super.key, required this.toiletId, required this.toiletCode});
 
   @override
   State<ChecklistScreen> createState() => _ChecklistScreenState();
@@ -18,7 +19,8 @@ class ChecklistScreen extends StatefulWidget {
 class _ChecklistScreenState extends State<ChecklistScreen> {
   String _selectedStatus = 'pending';
   final List<String> _statusOptions = ['pending', 'completed'];
-  final ChecklistController checklistController = Get.put(ChecklistController());
+  final ChecklistController checklistController =
+      Get.put(ChecklistController());
 
   @override
   void initState() {
@@ -29,8 +31,65 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColorlightgrey,
       appBar: AppBar(
-        title: const Text('Update Checklist'),
+        elevation: 0,
+        backgroundColor: primaryButton,
+        title: const Text(
+          'Update Checklist',
+          style: TextStyle(
+            color: white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.qr_code,
+                  size: 16,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  widget.toiletCode,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).primaryColor,
+                Theme.of(context).primaryColor.withOpacity(0.8),
+              ],
+            ),
+          ),
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Obx(() {
         if (checklistController.isLoading.value) {
@@ -56,6 +115,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                   final int index = entry.key;
                   final checklist = entry.value;
                   return Card(
+                    surfaceTintColor: white,
                     margin: const EdgeInsets.only(bottom: 8),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -73,12 +133,16 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                           Row(
                             children: [
                               ElevatedButton(
-                                onPressed: () => checklistController.updateChecklistAnswer(
-                                  index: index + 1,
+                                onPressed: () =>
+                                    checklistController.updateChecklistAnswer(
+                                  index: checklist.id,
                                   value: "yes",
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: checklistController.checklistAnswers["checklist[${index + 1}]"] == "yes"
+                                  backgroundColor: checklistController
+                                                  .checklistAnswers[
+                                              "checklist[${checklist.id}]"] ==
+                                          "yes"
                                       ? Colors.green
                                       : Colors.grey,
                                   padding: const EdgeInsets.symmetric(
@@ -96,12 +160,16 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                               ),
                               const SizedBox(width: 12),
                               ElevatedButton(
-                                onPressed: () => checklistController.updateChecklistAnswer(
-                                  index: index + 1,
+                                onPressed: () =>
+                                    checklistController.updateChecklistAnswer(
+                                  index: checklist.id,
                                   value: "no",
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: checklistController.checklistAnswers["checklist[${index + 1}]"] == "no"
+                                  backgroundColor: checklistController
+                                                  .checklistAnswers[
+                                              "checklist[${checklist.id}]"] ==
+                                          "no"
                                       ? Colors.red
                                       : Colors.grey,
                                   padding: const EdgeInsets.symmetric(
@@ -136,29 +204,40 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  ...checklistController.complaints.map((complaint) => Card(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Date: ${complaint.date}'),
-                          const SizedBox(height: 8),
-                          Text('Complaint: ${complaint.complaint}'),
-                          if (complaint.image != null) ...[
-                            const SizedBox(height: 8),
-                            Image.network(
-                              "https://esmagroup.online/surabhi/public/complaints/${complaint.image!}",
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Text('Image not available');
-                              },
+                  ...checklistController.complaints
+                      .map((complaint) => Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white
+                        ),
+                        width: double.infinity,
+                        child: Card(
+                          color: Colors.red,
+                              margin: const EdgeInsets.only(bottom: 8),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Date: ${complaint.date}',style: TextStyle(color: white),),
+                                    const SizedBox(height: 8),
+                                    Text('Complaint: ${complaint.complaint}',style: TextStyle(color: white),),
+                                    if (complaint.image != null) ...[
+                                      const SizedBox(height: 8),
+                                      Image.network(
+                                        "https://esmagroup.online/surabhi/public/complaints/${complaint.image!}",
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Text(
+                                              'Image not available');
+                                        },
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
                             ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  )).toList(),
+                      ))
+                      .toList(),
                 ],
 
                 // Image Picker Section
@@ -202,7 +281,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                   title: "Submit",
                   onPressed: () {
                     // Validate answers
-                    if (checklistController.checklists.length != 
+                    if (checklistController.checklists.length !=
                         checklistController.checklistAnswers.length) {
                       Get.snackbar(
                         'Error',
@@ -215,10 +294,12 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                     }
 
                     // Validate image
-                    if (checklistController.image.value == null) {
+                    // Update the image validation in your submit button
+                    if (checklistController.images
+                        .every((imageRx) => imageRx.value == null)) {
                       Get.snackbar(
                         'Error',
-                        'Please select an image',
+                        'Please take at least one image',
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,

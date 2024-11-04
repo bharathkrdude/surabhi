@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/controller/dropdown_sample.dart';
-import 'package:surabhi/view/screens/bookscreen/screen_maintain.dart';
+import 'package:surabhi/view/screens/dashboard/screen_dashboard.dart';
 import 'package:surabhi/view/screens/profile/profile_screen.dart';
 import 'package:surabhi/view/screens/test/testDelete.dart';
 import 'package:surabhi/view/widgets/qr_code_widget.dart';
@@ -16,10 +17,11 @@ class BottomNavigationWidget extends StatefulWidget {
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
-     ScreenMaintain(),
+    //  ScreenMaintain(),
+    screenDashboard(),
      ScreenMaintainTest(),
     const QRCodeScannerPage(),
-    ClusterDropdownPage(),
+   
     // const Center(child: Text("Alerts Page")),
     ProfilePage(),
   ];
@@ -43,15 +45,15 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blueAccent,
+        selectedItemColor: Get.theme.primaryColor,
         unselectedItemColor: Colors.grey[600],
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
         items: [
-          _buildBottomNavItem(Icons.handyman_outlined, 'Main'),
-          _buildBottomNavItem(Icons.bookmark_border_outlined, 'Bookmarks'),
-          _buildBottomNavItem(Icons.qr_code_outlined, 'QR'),
-          _buildBottomNavItem(Icons.dangerous_outlined, 'Alerts'),
+          _buildBottomNavItem(Icons.dashboard, 'Dashboard'),
+          // _buildBottomNavItem(Icons.bookmark_border_outlined, 'Bookmarks'),
+          _buildBottomNavItem(Icons.warning_amber_sharp, 'Toilets'),
+          _buildBottomNavItem(Icons.qr_code, 'Scan'),
           _buildBottomNavItem(Icons.person_2_outlined, 'Profile'),
         ],
       ),
@@ -73,14 +75,14 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
         Icon(
           icon,
           size: 24,
-          color: active ? Colors.blueAccent : Colors.grey[600],
+          color: active ? Get.theme.primaryColor : Colors.grey[600],
         ),
         if (active)
           Container(
             margin: const EdgeInsets.only(top: 4.0),
             height: 2,
             width: 24,
-            color: Colors.blueAccent,
+            color: Get.theme.primaryColor,
           ),
       ],
     );

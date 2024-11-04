@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:surabhi/controller/auth/authController.dart';
+import 'package:surabhi/controller/auth/auth_controller.dart';
 import 'package:surabhi/controller/checklist/checklist_controller.dart';
 import 'package:surabhi/controller/toilet/toilet_cotroller.dart';
+import 'package:surabhi/view/screens/botttomnavigation/bottom_navigation_widget.dart';
 import 'package:surabhi/view/screens/login/login_screen.dart';
 import 'package:surabhi/view/screens/main/screen_main.dart';
 import 'package:surabhi/view/screens/splash/screen_splash.dart';
@@ -24,13 +25,14 @@ class MyApp extends StatelessWidget {
       title: 'Surabhi',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: Colors.green,
         useMaterial3: true,
       ),
       initialRoute: '/splash',
       getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/login', page: () => const LoginScreen()),
-        GetPage(name: '/home', page: () => const ScreenMain()),
+        GetPage(name: '/home', page: () => BottomNavigationWidget()),
       ],
     );
   }
