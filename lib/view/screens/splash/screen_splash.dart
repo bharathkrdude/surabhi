@@ -4,16 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surabhi/constants/colors.dart';
 import 'package:surabhi/view/screens/botttomnavigation/bottom_navigation_widget.dart';
 import 'package:surabhi/view/screens/login/login_screen.dart';
-import 'package:surabhi/view/screens/main/screen_main.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeInAnimation;
 
@@ -51,7 +50,7 @@ Future<void> _checkLoginStatus() async {
       // If user is logged in, navigate to Main Page
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => BottomNavigationWidget(),
+          builder: (context) => const BottomNavigationWidget(),
         ),
       );
     } else {
@@ -86,11 +85,11 @@ Future<void> _checkLoginStatus() async {
                 logo,
                 height: 100, // Adjust this value to make the logo image smaller
               ),
-              const SizedBox(height: 20), // Space between images
-              Image.asset(
-                logoText,
-                height: 30, // Adjust this value to make the text image smaller
-              ),
+              // const SizedBox(height: 20), // Space between images
+              // Image.asset(
+              //   logoText,
+              //   height: 30, // Adjust this value to make the text image smaller
+              // ),
             ],
           ),
         ),

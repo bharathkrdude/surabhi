@@ -94,20 +94,23 @@ class Complaint {
 
 // Response model for API responses
 class ChecklistResponse {
+  final String toiletCode;
   final bool status;
   final String message;
   final List<Checklist> checklists;
   final List<Complaint> complaints;
 
-  ChecklistResponse({
+  ChecklistResponse( {
+    required  this.toiletCode,
     required this.status,
     required this.message,
     required this.checklists,
-    required this.complaints,
+    required this.complaints, 
   });
 
   factory ChecklistResponse.fromJson(Map<String, dynamic> json) {
     return ChecklistResponse(
+      toiletCode: json['toilet_code'],
       status: json['status'] as bool,
       message: json['message'] as String,
       checklists: (json['checklists'] as List)
@@ -121,6 +124,7 @@ class ChecklistResponse {
 
   Map<String, dynamic> toJson() {
     return {
+      'toilet_code':toiletCode,
       'status': status,
       'message': message,
       'checklists': checklists.map((e) => e.toJson()).toList(),

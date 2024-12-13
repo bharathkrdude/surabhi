@@ -1,4 +1,5 @@
 {
-    "cmake.sourceDirectory": "C:/Users/bhara/Documents/surabhi/windows/runner",
-    "java.configuration.updateBuildConfiguration": "interactive"
+  "cmake.sourceDirectory": "C:/Users/bhara/Documents/surabhi/windows/runner",
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "dart.flutterSdkPath": ".fvm/versions/3.24.3"
 }

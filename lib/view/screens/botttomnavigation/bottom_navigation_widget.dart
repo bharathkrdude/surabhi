@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:surabhi/constants/colors.dart';
-import 'package:surabhi/controller/dropdown_sample.dart';
-import 'package:surabhi/view/screens/dashboard/screen_dashboard.dart';
+import 'package:surabhi/view/screens/dashboard%20copy/dashboard_screen.dart';
 import 'package:surabhi/view/screens/profile/profile_screen.dart';
-import 'package:surabhi/view/screens/test/testDelete.dart';
+import 'package:surabhi/view/screens/toilets/screen_toilet.dart';
 import 'package:surabhi/view/widgets/qr_code_widget.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({super.key});
 
   @override
-  _BottomNavigationWidgetState createState() => _BottomNavigationWidgetState();
+  BottomNavigationWidgetState createState() => BottomNavigationWidgetState();
 }
 
-class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
+class BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   int _currentIndex = 0;
+
   final List<Widget> _screens = [
-    //  ScreenMaintain(),
-    screenDashboard(),
-     ScreenMaintainTest(),
+    //  ScreenDashboard(),
+     DashboardScreen(),
+     ScreenToilet(),
     const QRCodeScannerPage(),
-   
-    // const Center(child: Text("Alerts Page")),
-    ProfilePage(),
+    const ProfilePage(),
   ];
 
   void _onTabTapped(int index) {
@@ -36,53 +33,112 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColorgrey,
-      
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Get.theme.primaryColor,
-        unselectedItemColor: Colors.grey[600],
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
-        items: [
-          _buildBottomNavItem(Icons.dashboard, 'Dashboard'),
-          // _buildBottomNavItem(Icons.bookmark_border_outlined, 'Bookmarks'),
-          _buildBottomNavItem(Icons.warning_amber_sharp, 'Toilets'),
-          _buildBottomNavItem(Icons.qr_code, 'Scan'),
-          _buildBottomNavItem(Icons.person_2_outlined, 'Profile'),
-        ],
       ),
     );
   }
+}
 
-  BottomNavigationBarItem _buildBottomNavItem(IconData icon, String label) {
-    return BottomNavigationBarItem(
-      icon: _buildIcon(icon),
-      label: label,
-      activeIcon: _buildIcon(icon, active: true),
+class CustomBottomNavigationBar extends StatelessWidget {
+  final int currentIndex;
+  final Function(int) onTap;
+
+  const CustomBottomNavigationBar({
+    required this.currentIndex,
+    required this.onTap,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: onTap,
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: secondary,
+      unselectedItemColor: Colors.grey[600],
+      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+      items: [
+        CustomBottomNavigationBarItem(
+          icon: Icons.dashboard,
+          label: 'Dashboard',
+          isActive: currentIndex == 0,
+        ),
+        CustomBottomNavigationBarItem(
+          icon: Icons.room,
+          label: 'Toilets',
+          isActive: currentIndex == 1,
+        ),
+        CustomBottomNavigationBarItem(
+          icon: Icons.qr_code,
+          label: 'Scan',
+          isActive: currentIndex == 2,
+        ),
+        CustomBottomNavigationBarItem(
+          icon: Icons.person_2_outlined,
+          label: 'Profile',
+          isActive: currentIndex == 3,
+        ),
+      ].map((item) => item.toBottomNavigationBarItem()).toList(),
     );
   }
+}
 
-  Widget _buildIcon(IconData icon, {bool active = false}) {
+class CustomBottomNavigationBarItem {
+  final IconData icon;
+  final String label;
+  final bool isActive;
+
+  CustomBottomNavigationBarItem({
+    required this.icon,
+    required this.label,
+    required this.isActive,
+  });
+
+  BottomNavigationBarItem toBottomNavigationBarItem() {
+    return BottomNavigationBarItem(
+      icon: CustomIconWidget(
+        icon: icon,
+        isActive: isActive,
+      ),
+      label: label,
+    );
+  }
+}
+
+class CustomIconWidget extends StatelessWidget {
+  final IconData icon;
+  final bool isActive;
+
+  const CustomIconWidget({
+    required this.icon,
+    this.isActive = false,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           icon,
           size: 24,
-          color: active ? Get.theme.primaryColor : Colors.grey[600],
+          color: isActive ? secondary : Colors.grey[600],
         ),
-        if (active)
+        if (isActive)
           Container(
             margin: const EdgeInsets.only(top: 4.0),
             height: 2,
             width: 24,
-            color: Get.theme.primaryColor,
+            color: secondary,
           ),
       ],
     );

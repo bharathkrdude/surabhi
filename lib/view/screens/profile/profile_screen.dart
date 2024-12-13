@@ -3,13 +3,16 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:surabhi/controller/auth/auth_controller.dart';
+import 'package:surabhi/view/screens/profile/change_password_screen.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage> {
   final AuthController _authController = AuthController();
   File? _image;
   final picker = ImagePicker();
@@ -78,10 +81,13 @@ class _ProfilePageState extends State<ProfilePage> {
               title: Text('Performance Rating'),
               subtitle: Text('4.8/5.0'),
             ),
-            const ListTile(
-              leading: Icon(Icons.cleaning_services),
-              title: Text('Areas of Expertise'),
-              subtitle: Text('Toilet Cleaning, Floor Mopping, Sanitization'),
+             ListTile(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChangePassWordScreen()));
+              },
+              leading: Icon(Icons.password),
+              title: Text('Change Password'),
+              
             ),
             const ListTile(
               leading: Icon(Icons.event_note),

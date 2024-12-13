@@ -1,50 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:surabhi/constants/colors.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final String? prefixText;
-  final TextInputType? keyboardType;
-  final List<TextInputFormatter>? inputFormatters;
-  final int maxLines;
-  final Function(String?) onSaved;
-  final String? Function(String?)? validator;
+  final TextEditingController controller;
+  final String labelText;
+  final bool obscureText;
+  final IconData prefixIcon;
+  final IconData? suffixIcon;
+  final VoidCallback? onSuffixIconPressed;
 
   const CustomTextField({
     super.key,
-    required this.label,
-    required this.icon,
-    this.prefixText,
-    this.keyboardType,
-    this.inputFormatters,
-    this.maxLines = 1,
-    required this.onSaved,
-    this.validator,
+    required this.controller,
+    required this.labelText,
+    this.obscureText = false,
+    required this.prefixIcon,
+    this.suffixIcon,
+    this.onSuffixIconPressed, required InputDecoration decoration,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: Icon(icon, color: Colors.red.shade300),
-          prefixText: prefixText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-        ),
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
-        maxLines: maxLines,
-        onSaved: onSaved,
-        validator: validator,
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: Icon(prefixIcon, color: primaryButton),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        suffixIcon: suffixIcon != null
+            ? IconButton(
+                icon: Icon(suffixIcon),
+                onPressed: onSuffixIconPressed,
+              )
+            : null,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:surabhi/constants/colors.dart';
 import 'dart:io';
 import 'package:surabhi/controller/checklist/checklist_controller.dart';
 
@@ -87,134 +88,125 @@ class ImagePickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // First Image
-        Container(
-          height: 200,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.85,
           ),
-          child: Obx(() => controller.images[0].value != null
-              ? Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        File(controller.images[0].value!.path),
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    ),
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: IconButton(
-                        icon: const Icon(Icons.close, color: Colors.red),
-                        onPressed: () => controller.removeImage(0),
-                      ),
-                    ),
-                  ],
-                )
-              : const Center(child: Text('No image selected'))),
+          itemCount: 3,
+          itemBuilder: (context, index) => _buildImageCard(index, context),
         ),
-        const SizedBox(height: 8),
-        ElevatedButton.icon(
-          onPressed: () => _pickImage(ImageSource.camera, 0),
-          icon: const Icon(Icons.camera_alt),
-          label: const Text('Take Picture 1'),
-        ),
+      ),
+    );
+  }
 
-        const SizedBox(height: 16),
-
-        // Second Image
-        Container(
-          height: 200,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
+  Widget _buildImageCard(int index, BuildContext context) {
+    return Card(
+      surfaceTintColor: Colors.grey,
+      elevation: 3,
+      shadowColor: Colors.black26,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Obx(() => controller.images[index].value != null
+                  ? Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(16),
+                          ),
+                          child: Image.file(
+                            File(controller.images[index].value!.path),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Material(
+                            color: Colors.white.withOpacity(0.9),
+                            shape: const CircleBorder(),
+                            child: IconButton(
+                              icon: Icon(Icons.close, 
+                                color: Colors.red.shade400,
+                                size: 22,
+                              ),
+                              onPressed: () => controller.removeImage(index),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(
+                    width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: secondary,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.add_photo_alternate_rounded,
+                        size: 45,
+                        color: Colors.grey.shade400,
+                      ),
+                    )),
+            ),
           ),
-          child: Obx(() => controller.images[1].value != null
-              ? Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        File(controller.images[1].value!.path),
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    ),
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: IconButton(
-                        icon: const Icon(Icons.close, color: Colors.red),
-                        onPressed: () => controller.removeImage(1),
-                      ),
-                    ),
-                  ],
-                )
-              : const Center(child: Text('No image selected'))),
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton.icon(
-          onPressed: () => _pickImage(ImageSource.camera, 1),
-          icon: const Icon(Icons.camera_alt),
-          label: const Text('Take Picture 2'),
-        ),
-
-        const SizedBox(height: 16),
-
-        // Third Image
-        Container(
-          height: 200,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(16),
+                        ),
+              color: white
+            ),
+            
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // IconButton(
+                //   icon: Icon(Icons.photo_library_rounded,
+                //     color: Theme.of(context).primaryColor,
+                //   ),
+                //   onPressed: () => _pickImage(ImageSource.gallery, index),
+                //   tooltip: 'Choose from gallery',
+                // ),
+                IconButton(
+                  icon: Icon(Icons.camera_alt_rounded,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () => _pickImage(ImageSource.camera, index),
+                  tooltip: 'Take a photo',
+                ),
+              ],
+            ),
           ),
-          child: Obx(() => controller.images[2].value != null
-              ? Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        File(controller.images[2].value!.path),
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    ),
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: IconButton(
-                        icon: const Icon(Icons.close, color: Colors.red),
-                        onPressed: () => controller.removeImage(2),
-                      ),
-                    ),
-                  ],
-                )
-              : const Center(child: Text('No image selected'))),
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton.icon(
-          onPressed: () => _pickImage(ImageSource.camera, 2),
-          icon: const Icon(Icons.camera_alt),
-          label: const Text('Take Picture 3'),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Future<void> _pickImage(ImageSource source, int index) async {
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
+      final picker = ImagePicker();
+      final image = await picker.pickImage(
         source: source,
         maxWidth: 1800,
         maxHeight: 1800,
@@ -228,6 +220,11 @@ class ImagePickerWidget extends StatelessWidget {
         'Error',
         'Failed to pick image: $e',
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade50,
+        colorText: Colors.red.shade900,
+        duration: const Duration(seconds: 3),
+        borderRadius: 8,
+        margin: const EdgeInsets.all(16),
       );
     }
   }

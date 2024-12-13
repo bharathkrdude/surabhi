@@ -22,7 +22,7 @@ class PrimaryButtonWidget extends StatelessWidget {
         color: primaryButton
       ),
       child: Material(
-        color: Colors.transparent,
+        color: secondary,
         borderRadius: BorderRadius.circular(8.0),
         child: InkWell(
           onTap: onPressed,

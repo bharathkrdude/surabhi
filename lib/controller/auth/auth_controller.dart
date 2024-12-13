@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:surabhi/model/user/userModel.dart';
+import 'package:surabhi/model/user/user_model.dart';
 import 'package:surabhi/services/api_service.dart';
 
 class AuthController extends GetxController {

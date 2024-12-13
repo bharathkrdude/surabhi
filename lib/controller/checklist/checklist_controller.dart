@@ -1,19 +1,21 @@
-// checklist_controller.dart
 import 'package:dio/dio.dart' as dio;
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surabhi/model/cheklist/checklist_model.dart';
+import 'package:surabhi/utils/utils.dart';
 import 'dart:io';
+import 'package:surabhi/view/widgets/success_page.dart';
 
 class ChecklistController extends GetxController {
+  final toiletCode = ''.obs;
+
   final checklists = <Checklist>[].obs;
   final complaints = <Complaint>[].obs;
   final isLoading = false.obs;
   final checklistAnswers = <String, String>{}.obs;
-  // final images = <File>[].obs;
   final dioClient = dio.Dio();
   final images = List.generate(3, (index) => Rxn<File>());
+
   Future<String?> _getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
@@ -33,6 +35,9 @@ class ChecklistController extends GetxController {
       );
 
       if (response.statusCode == 200 && response.data['status'] == true) {
+        // Add this line to get toilet code
+        toiletCode.value = response.data['toilet_code'] ?? '';
+
         checklists.value = (response.data['checklists'] as List)
             .map((item) => Checklist.fromJson(item))
             .toList();
@@ -40,23 +45,21 @@ class ChecklistController extends GetxController {
             .map((item) => Complaint.fromJson(item))
             .toList();
       } else {
-        Get.snackbar("Error", response.data['message']);
+        // Use toast for error message
+        Utils().showToast(response.data['message'] ?? "Error occurred", isSuccess: false);
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      // Use toast for error message
+      Utils().showToast(e.toString(), isSuccess: false);
     } finally {
       isLoading.value = false;
     }
   }
-  // ... fetchChecklistData method remains same ...
 
   void updateChecklistAnswer({required int index, required String value}) {
-    checklistAnswers["checklist[$index]"] =
-        value; // Updated format to match API
+    checklistAnswers["checklist[$index]"] = value;
     update();
   }
-
-  // Replace single image with list of images
 
   // Method to set image at specific index
   void setImage(int index, File image) {
@@ -73,8 +76,7 @@ class ChecklistController extends GetxController {
   }
 
   // Update submitChecklist method to handle multiple images
-  Future<void> submitChecklist(
-      {required int toiletId, required String status}) async {
+  Future<void> submitChecklist({required int toiletId, required String status}) async {
     isLoading.value = true;
     try {
       String? token = await _getToken();
@@ -117,32 +119,19 @@ class ChecklistController extends GetxController {
           imageRx.value = null;
         }
         checklistAnswers.clear();
+        Get.to(const SuccessPage());
 
-        Get.snackbar(
-          "Success",
-          "Checklist updated successfully",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+        // Use toast for success message
+        Utils().showToast("Checklist updated successfully", isSuccess: true);
+        
         await fetchChecklistData(toiletId);
       } else {
-        Get.snackbar(
-          "Error",
-          response.data['message'] ?? "Update failed",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        // Use toast for error message
+        Utils().showToast(response.data['message'] ?? "Update failed", isSuccess: false);
       }
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      // Use toast for error message
+      Utils().showToast(e.toString(), isSuccess: false);
     } finally {
       isLoading.value = false;
     }

@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:surabhi/model/user/userModel.dart';
+import 'package:surabhi/model/user/user_model.dart';
 
 class ApiService {
   static const baseUrl = 'https://esmagroup.online/surabhi/api/v1/';

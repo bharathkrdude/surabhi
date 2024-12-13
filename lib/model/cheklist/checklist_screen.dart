@@ -8,9 +8,10 @@ import 'package:surabhi/view/widgets/primary_button_widget.dart';
 
 class ChecklistScreen extends StatefulWidget {
   final int toiletId;
-  final String toiletCode;
-  const ChecklistScreen(
-      {super.key, required this.toiletId, required this.toiletCode});
+  const ChecklistScreen({
+    super.key,
+    required this.toiletId,
+  });
 
   @override
   State<ChecklistScreen> createState() => _ChecklistScreenState();
@@ -44,38 +45,39 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
           ),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.3),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.qr_code,
-                  size: 16,
-                  color: Colors.white,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  widget.toiletCode,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.5,
+          Obx(() => Container(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.3),
+                    width: 1,
                   ),
                 ),
-              ],
-            ),
-          ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.qr_code,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      checklistController.toiletCode.value,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
         ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -93,7 +95,10 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
       ),
       body: Obx(() {
         if (checklistController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(
+            color: secondary,
+          ));
         }
 
         return SingleChildScrollView(
@@ -149,6 +154,9 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                     horizontal: 24,
                                     vertical: 12,
                                   ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
                                 child: const Text(
                                   'Yes',
@@ -176,6 +184,9 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                                     horizontal: 24,
                                     vertical: 12,
                                   ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
                                 child: const Text(
                                   'No',
@@ -191,7 +202,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                       ),
                     ),
                   );
-                }).toList(),
+                }),
 
                 // Complaints Section
                 if (checklistController.complaints.isNotEmpty) ...[
@@ -204,40 +215,41 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  ...checklistController.complaints
-                      .map((complaint) => Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white
-                        ),
+                  ...checklistController.complaints.map((complaint) =>
+                      SizedBox(
+                        
                         width: double.infinity,
                         child: Card(
                           color: Colors.red,
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Date: ${complaint.date}',style: TextStyle(color: white),),
-                                    const SizedBox(height: 8),
-                                    Text('Complaint: ${complaint.complaint}',style: TextStyle(color: white),),
-                                    if (complaint.image != null) ...[
-                                      const SizedBox(height: 8),
-                                      Image.network(
-                                        "https://esmagroup.online/surabhi/public/complaints/${complaint.image!}",
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const Text(
-                                              'Image not available');
-                                        },
-                                      ),
-                                    ],
-                                  ],
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Date: ${complaint.date}',
+                                  style: const TextStyle(color: white),
                                 ),
-                              ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Complaint: ${complaint.complaint}',
+                                  style: const TextStyle(color: white),
+                                ),
+                                if (complaint.image != null) ...[
+                                  const SizedBox(height: 8),
+                                  Image.network(
+                                    "https://esmagroup.online/surabhi/public/complaints/${complaint.image!}",
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Text('Image not available');
+                                    },
+                                  ),
+                                ],
+                              ],
                             ),
-                      ))
-                      .toList(),
+                          ),
+                        ),
+                      )),
                 ],
 
                 // Image Picker Section
@@ -286,21 +298,20 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                       Get.snackbar(
                         'Error',
                         'Please answer all checklist questions',
-                        snackPosition: SnackPosition.BOTTOM,
+                        snackPosition: SnackPosition.TOP,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
                       );
                       return;
                     }
 
-                    // Validate image
                     // Update the image validation in your submit button
                     if (checklistController.images
                         .every((imageRx) => imageRx.value == null)) {
                       Get.snackbar(
                         'Error',
                         'Please take at least one image',
-                        snackPosition: SnackPosition.BOTTOM,
+                        snackPosition: SnackPosition.TOP,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
                       );

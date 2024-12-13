@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surabhi/constants/colors.dart';
 
 class TextButtonWidget extends StatelessWidget {
   final VoidCallback onPressed; // Accept onPressed as a parameter
@@ -27,12 +28,12 @@ class TextButtonWidget extends StatelessWidget {
         onPressed: onPressed, // Use the passed onPressed function
         icon:  Icon(
           Icons.short_text_sharp, // Filter icon
-          color:Get.theme.primaryColor,
+          color:secondary,
         ),
         label:  Text(
           'Filter',
           style:  TextStyle(
-            color:  Get.theme.primaryColor,
+            color:  secondary,
           ),
         ),
       ),

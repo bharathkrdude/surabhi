@@ -7,10 +7,10 @@ class UpdateChecklist extends StatefulWidget {
   const UpdateChecklist({super.key, required int toiletId});
 
   @override
-  _UpdateChecklistState createState() => _UpdateChecklistState();
+  UpdateChecklistState createState() => UpdateChecklistState();
 }
 
-class _UpdateChecklistState extends State<UpdateChecklist> {
+class UpdateChecklistState extends State<UpdateChecklist> {
   // Store answers for each question (null, 'yes', 'no')
   final List<String?> _answers = List.generate(6, (_) => null);
 
